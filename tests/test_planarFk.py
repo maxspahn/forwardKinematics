@@ -1,6 +1,6 @@
 import casadi as ca
 import numpy as np
-from forwardKinematics.planarFk import PlanarArmFk
+from forwardKinematics.planarFks.planarArmFk import PlanarArmFk
 
 
 def test_planarFk():

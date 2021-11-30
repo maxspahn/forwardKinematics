@@ -1,10 +1,10 @@
 import casadi as ca
-from forwardKinematics.pandaFk import PandaFk
-from forwardKinematics.mobilePandaFk import MobilePandaFk
-from forwardKinematics.tiagoFk import TiagoFk
-from forwardKinematics.planarFk import PlanarArmFk
-from forwardKinematics.groundRobotFk import GroundRobotFk
-from forwardKinematics.pointFk import PointFk
+from forwardKinematics.urdfFks.pandaFk import PandaFk
+from forwardKinematics.urdfFks.mobilePandaFk import MobilePandaFk
+from forwardKinematics.urdfFks.tiagoFk import TiagoFk
+from forwardKinematics.planarFks.planarArmFk import PlanarArmFk
+from forwardKinematics.planarFks.groundRobotFk import GroundRobotFk
+from forwardKinematics.planarFks.pointFk import PointFk
 
 
 class FkCreator(object):

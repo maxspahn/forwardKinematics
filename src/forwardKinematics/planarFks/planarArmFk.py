@@ -1,6 +1,6 @@
 import numpy as np
 import casadi as ca
-from forwardKinematics.fk import ForwardKinematics
+from forwardKinematics.fksCommon.fk import ForwardKinematics
 
 
 class PlanarArmFk(ForwardKinematics):

@@ -1,0 +1,4 @@
+casadi
+numpy
+matplotlib
+-e git+https://github.com/maxspahn/urdf2casadi@master#egg=urdf2casadi

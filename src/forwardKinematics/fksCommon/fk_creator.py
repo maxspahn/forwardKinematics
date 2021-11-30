@@ -1,25 +1,25 @@
 import casadi as ca
-from forwardKinematics.urdfFks.pandaFk import PandaFk
-from forwardKinematics.urdfFks.mobilePandaFk import MobilePandaFk
-from forwardKinematics.urdfFks.tiagoFk import TiagoFk
-from forwardKinematics.planarFks.planarArmFk import PlanarArmFk
-from forwardKinematics.planarFks.groundRobotFk import GroundRobotFk
-from forwardKinematics.planarFks.pointFk import PointFk
 
 
 class FkCreator(object):
     def __init__(self, robotType, n):
         if robotType == 'panda':
+            from forwardKinematics.urdfFks.pandaFk import PandaFk
             self._fk = PandaFk(n)
         elif robotType == 'tiago':
+            from forwardKinematics.urdfFks.tiagoFk import TiagoFk
             self._fk = TiagoFk(n-4)
         elif robotType == 'planarArm':
+            from forwardKinematics.planarFks.planarArmFk import PlanarArmFk
             self._fk = PlanarArmFk(n)
         elif robotType == 'mobilePanda':
+            from forwardKinematics.urdfFks.mobilePandaFk import MobilePandaFk
             self._fk = MobilePandaFk(n)
         elif robotType == 'pointRobot' or robotType == 'pointMass':
+            from forwardKinematics.planarFks.pointFk import PointFk
             self._fk = PointFk(n)
         elif robotType == 'groundRobot':
+            from forwardKinematics.planarFks.groundRobotFk import GroundRobotFk
             self._fk = GroundRobotFk(n)
 
     def fk(self):

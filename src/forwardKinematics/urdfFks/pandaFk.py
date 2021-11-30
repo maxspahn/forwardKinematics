@@ -1,6 +1,6 @@
 import numpy as np
 import casadi as ca
-from forwardKinematics.fksCommon.fk import URDFForwardKinematics
+from forwardKinematics.urdfFks.urdfFk import URDFForwardKinematics
 
 
 class PandaFk(URDFForwardKinematics):

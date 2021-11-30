@@ -1,6 +1,6 @@
 import numpy as np
 import casadi as ca
-from forwardKinematics.fksCommon.fk import URDFForwardKinematics
+from forwardKinematics.urdfFks.urdfFk import URDFForwardKinematics
 
 
 class AlbertFk(URDFForwardKinematics):
@@ -12,9 +12,9 @@ class AlbertFk(URDFForwardKinematics):
 
 
 if __name__ == "__main__":
-    q_ca = ca.SX.sym("q_ca", 7)
-    pfk = PandaFk(7)
-    fkCasadi = pfk.fk(q_ca, 7)
-    q_np = np.array([-0.01026582, -0.28908, 0.00922652, -1.3468, -0.026000, 2.074019, 0.06062268])
+    q_ca = ca.SX.sym("q_ca", 10)
+    pfk = AlbertFk(10)
+    fkCasadi = pfk.fk(q_ca, 10)
+    q_np = np.array([-0.01026582, -0.28908, 0.00922652, -1.3468, -0.026000, 2.074019, 0.06062268, 0.0, 0.0, 0.0])
     fkNumpy = pfk.fk(q_np, 7, positionOnly=True)
     print(fkNumpy)

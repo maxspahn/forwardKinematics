@@ -6,6 +6,9 @@ class FkCreator(object):
         if robotType == 'panda':
             from forwardKinematics.urdfFks.pandaFk import PandaFk
             self._fk = PandaFk(n)
+        elif robotType == 'boxer':
+            from forwardKinematics.urdfFks.boxerFk import BoxerFk
+            self._fk = BoxerFk(n)
         elif robotType == 'tiago':
             from forwardKinematics.urdfFks.tiagoFk import TiagoFk
             self._fk = TiagoFk(n-4)
@@ -27,7 +30,7 @@ class FkCreator(object):
 
 
 if __name__ == "__main__":
-    fk = FkCreator('groundRobot', 2).fk()
+    fk = FkCreator('boxer', 3).fk()
     q_ca = ca.SX.sym('q', fk.n())
     fk = fk.fk(q_ca, fk.n(), positionOnly=True)
     print(fk)

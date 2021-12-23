@@ -1,10 +1,9 @@
 # Installation
 
-IMPORTANT: The package is dependent on a modified version of urdf2casadi that allows to
-pass symbolic values to the forward kinematics. This modification is implemented in the
-fork https://github.com/maxspahn/urdf2casadi.
+This package provides a forward kinematics for simple robots as symbolic functions using
+casadi. This allows the usage in model predictive control schemes and other trajectory
+optimization methods.
 
 ```bash
-pip3 install -r requirements.txt
 pip3 install -e .
 ```

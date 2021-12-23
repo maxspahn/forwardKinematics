@@ -1,6 +1,6 @@
 import casadi as ca
 import numpy as np
-from forwardKinematics.fksCommon.fk_creator import FkCreator
+from forwardkinematics.fksCommon.fk_creator import FkCreator
 
 def test_fkCreator():
     fkCreator = FkCreator('planarArm', 3)

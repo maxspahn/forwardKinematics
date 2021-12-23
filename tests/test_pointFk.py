@@ -1,6 +1,6 @@
 import casadi as ca
 import numpy as np
-from forwardKinematics.planarFks.pointFk import PointFk
+from forwardkinematics.planarFks.pointFk import PointFk
 
 
 def test_pointFk():

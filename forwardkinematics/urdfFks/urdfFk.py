@@ -4,7 +4,7 @@ import numpy as np
 import casadi as ca
 import urdf2casadi.urdfparser as u2c
 
-from forwardKinematics.fksCommon.fk import ForwardKinematics
+from forwardkinematics.fksCommon.fk import ForwardKinematics
 
 class URDFForwardKinematics(ForwardKinematics):
 

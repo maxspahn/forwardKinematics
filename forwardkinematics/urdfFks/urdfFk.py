@@ -2,7 +2,7 @@ from abc import abstractmethod, ABC
 import os
 import numpy as np
 import casadi as ca
-import urdf2casadi.urdfparser as u2c
+import forwardkinematics.urdfFks.urdf2casadi.urdfparser as u2c
 
 from forwardkinematics.fksCommon.fk import ForwardKinematics
 

@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "forwardkinematics"
+version = "0.1.0"
+description = "\"Light-weight implementation of forward kinematics using casadi.\""
+authors = ["Max Spahn <m.spahn@tudelft.nl>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+casadi = "3.5.1"
+numpy = "^1.15.5"
+urdf_parser_py = "0.0.3"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

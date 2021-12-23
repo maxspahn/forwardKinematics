@@ -1,2 +1,4 @@
 __pycache__
 forwardKinematics.egg-info/
+poetry.lock
+dist

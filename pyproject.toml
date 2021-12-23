@@ -13,7 +13,7 @@ repository = "https://github.com/maxspahn/forwardKinematics.git"
 python = "^3.6"
 casadi = "3.5.1"
 numpy = "^1.15.5"
-urdf_parser_py = "0.0.3"
+urdf_parser_py = ">=0.0.3"
 
 [tool.poetry.dev-dependencies]
 

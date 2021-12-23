@@ -5,5 +5,5 @@ casadi. This allows the usage in model predictive control schemes and other traj
 optimization methods.
 
 ```bash
-pip3 install -e .
+pip3 install forwardkinematics
 ```

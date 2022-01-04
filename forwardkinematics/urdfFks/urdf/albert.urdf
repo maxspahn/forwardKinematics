@@ -100,6 +100,20 @@
       <inertia ixx="0.2" ixy="0" ixz="0" iyy="0.2" iyz="0" izz="0.2"/>
     </inertial>
   </link>
+  <link name="base_tip_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.0625"/>
+      </geometry>
+      <material name="Boxer_Red"/>
+    </visual>
+  </link>
+  <joint name="base_tip_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0 -0.4 0"/>
+    <parent link="base_link"/>
+    <child link="base_tip_link"/>
+  </joint>
   <joint name="base_chassis_joint" type="fixed">
     <origin rpy="0 0 1.5708" xyz="0.15 0 0"/>
     <parent link="base_link"/>

@@ -1,0 +1,30 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Testing forward kinematics
+
+# Controls when the workflow will run
+on: 
+  push:
+    branches:
+      - main
+  pull-request:
+    branches:
+      - main
+
+jobs:
+  basic:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Install packages
+        run: poetry install --no-interaction
+
+      # Runs a set of commands using the runners shell
+      - name: Test examples
+        run: |
+          source .venv/bin/activate
+          pytest tests/
+

@@ -5,8 +5,8 @@
 <!-- =================================================================================== -->
 <robot name="albert">
   <link name="world"/>
-  <link name="world_baske_link_x"/>
-  <link name="world_baske_link_y"/>
+  <link name="world_base_link_x"/>
+  <link name="world_base_link_y"/>
   <joint name="world_base_x" type="prismatic">
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="world"/>
@@ -35,20 +35,17 @@
       <inertia ixx="0.2" ixy="0" ixz="0" iyy="0.2" iyz="0" izz="0.2"/>
     </inertial>
   </link>
-  <link name="ee_link">
-    <visual>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <geometry>
-        <sphere radius="0.0625"/>
-      </geometry>
-      <material name="Boxer_Red"/>
-    </visual>
-  </link>
-  <joint name="ee_joint" type="fixed">
-    <origin rpy="0 0 0" xyz="0 -0.4 0"/>
+  <link name="chassis_link"/>
+  <joint name="base_chassis_joint" type="fixed">
+    <origin rpy="0 0 -1.5708" xyz="0.0 0 0"/>
     <parent link="base_link"/>
+    <child link="chassis_link"/>
+  </joint>
+  <link name="ee_link"/>
+  <joint name="ee_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.4 0 0"/>
+    <parent link="chassis_link"/>
     <child link="ee_link"/>
   </joint>
-  <!-- end for simulation -->
 </robot>
 

@@ -19,7 +19,7 @@ class PlanarArmFk(ForwardKinematics):
             return self.numpy(q, i, positionOnly=positionOnly, endlink=endlink)
 
     def casadi(self, q, i, positionOnly=False, endlink=0.0):
-        fk = ca.SX(np.array([0.0, 0.0, q[0]]))
+        fk = ca.vertcat(np.zeros(2), q[0])
         for i in range(1, i + 1):
             fk[0] += ca.cos(fk[2]) * 1.0
             fk[1] += ca.sin(fk[2]) * 1.0

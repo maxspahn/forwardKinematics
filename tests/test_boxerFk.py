@@ -18,13 +18,13 @@ def test_fkZeros(fk):
     assert fkNumpy[2] == pytest.approx(0, abs=1e-4)
     fkNumpy = fk.fk(q_np, 1, positionOnly=True)
     assert isinstance(fkNumpy, np.ndarray)
-    assert fkNumpy[0] == pytest.approx(0, abs=1e-4)
-    assert fkNumpy[1] == pytest.approx(-0.4, abs=1e-4)
+    assert fkNumpy[0] == pytest.approx(0.4, abs=1e-4)
+    assert fkNumpy[1] == pytest.approx(0.0, abs=1e-4)
     assert fkNumpy[2] == pytest.approx(0, abs=1e-4)
     fkNumpy = fk.fk(q_np, 2, positionOnly=True)
     assert isinstance(fkNumpy, np.ndarray)
-    assert fkNumpy[0] == pytest.approx(0, abs=1e-4)
-    assert fkNumpy[1] == pytest.approx(-0.4, abs=1e-4)
+    assert fkNumpy[0] == pytest.approx(0.4, abs=1e-4)
+    assert fkNumpy[1] == pytest.approx(0.0, abs=1e-4)
     assert fkNumpy[2] == pytest.approx(0, abs=1e-4)
 
 
@@ -38,8 +38,8 @@ def test_fkNonZeros(fk):
     fkNumpy = fk.fk(q_np, 1, positionOnly=True)
     x = np.array(
         [
-            q_np[0] + ee_offset * np.sin(q_np[2]),
-            q_np[1] - ee_offset * np.cos(q_np[2]),
+            q_np[0] + ee_offset * np.cos(q_np[2]),
+            q_np[1] + ee_offset * np.sin(q_np[2]),
             0.0,
         ]
     )
@@ -49,8 +49,8 @@ def test_fkNonZeros(fk):
     fkNumpy = fk.fk(q_np, 2, positionOnly=True)
     x = np.array(
         [
-            q_np[0] + ee_offset * np.sin(q_np[2]),
-            q_np[1] - ee_offset * np.cos(q_np[2]),
+            q_np[0] + ee_offset * np.cos(q_np[2]),
+            q_np[1] + ee_offset * np.sin(q_np[2]),
             0.0,
         ]
     )

@@ -4,7 +4,6 @@ from forwardkinematics.fksCommon.fk import ForwardKinematics
 
 
 class GroundRobotFk(ForwardKinematics):
-
     def __init__(self, n=3):
         super().__init__()
         self._n = n
@@ -13,10 +12,10 @@ class GroundRobotFk(ForwardKinematics):
     def fk(self, q, i, positionOnly=False, endlink=0.0):
         assert i <= self._n
         if isinstance(q, ca.SX):
-            #assert(q.shape[0] == self._n)
+            # assert(q.shape[0] == self._n)
             return self.casadi(q, i, positionOnly=positionOnly, endlink=endlink)
         elif isinstance(q, np.ndarray):
-            #assert(q.size == self._n)
+            # assert(q.size == self._n)
             return self.numpy(q, i, positionOnly=positionOnly, endlink=endlink)
 
     def casadi(self, q, i, positionOnly=False, endlink=0.0):
@@ -45,14 +44,3 @@ class GroundRobotFk(ForwardKinematics):
             return fk[0:2]
         else:
             return fk
-
-
-if __name__ == "__main__":
-    q_ca = ca.SX.sym("q", 4)
-    fkPlanar = GroundRobotFk(4)
-    q_np = np.array([0.0, 0.0, 0.0, 1.57])
-    fkCasadi = fkPlanar.fk(q_ca, 1, positionOnly=True)
-    print(fkCasadi)
-    fkNumpy = fkPlanar.fk(q_np, 1, positionOnly=True)
-    print(fkNumpy)
-

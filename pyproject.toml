@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "forwardkinematics"
-version = "0.5.1"
+version = "0.5.2"
 description = "\"Light-weight implementation of forward kinematics using casadi.\""
 authors = ["Max Spahn <m.spahn@tudelft.nl>"]
 license = "MIT"

@@ -7,6 +7,7 @@
   <link name="world"/>
   <link name="world_base_link_x"/>
   <link name="world_base_link_y"/>
+  <link name="base_link_ori"/>
   <joint name="world_base_x" type="prismatic">
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="world"/>
@@ -24,9 +25,14 @@
   <joint name="world_base_theta" type="revolute">
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="world_base_link_y"/>
-    <child link="base_link"/>
+    <child link="base_link_ori"/>
     <axis xyz="0 0 1"/>
     <limit effort="100" lower="-15" upper="15" velocity="5"/>
+  </joint>
+  <joint name="base_add_orientation" type="fixed">
+    <origin rpy="0 0 1.57079" xyz="0.0 0 0"/>
+    <parent link="base_link_ori"/>
+    <child link="base_link"/>
   </joint>
   <link name="chassis_link"/>
   <link name="internal_link"/>

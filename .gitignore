@@ -2,3 +2,5 @@ __pycache__
 forwardkinematics.egg-info/
 dist
 *.swp
+.coverage
+.htmlcov

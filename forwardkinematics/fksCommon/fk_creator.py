@@ -27,6 +27,9 @@ class FkCreator(object):
         elif robotType == 'groundRobot':
             from forwardkinematics.planarFks.groundRobotFk import GroundRobotFk
             self._fk = GroundRobotFk(n)
+        elif robotType == 'pointRobotUrdf':
+            from forwardkinematics.urdfFks.pointRobotUrdfFk import PointRobotUrdfFk
+            self._fk = PointRobotUrdfFk(n)
 
     def fk(self):
         return self._fk

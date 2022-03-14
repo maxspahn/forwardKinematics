@@ -7,7 +7,7 @@ class TiagoFk(URDFForwardKinematics):
     def __init__(self, n):
         fileName = "tiago.urdf"
         linkIndices = [1, 2, 3, 4, 5, 7]
-        relevantLinks = ["world", "base_link", "torso_lift_link", "torso_lift_link"]
+        relevantLinks = ["world", "base_link", "torso_fixed_link", "torso_fixed_link", "torso_lift_link"]
         relevantLinks += ["arm_left_" + str(i) + "_link" for i in linkIndices] + [
             "arm_left_tool_link"
         ]

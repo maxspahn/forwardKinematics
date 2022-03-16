@@ -5,17 +5,15 @@ import pytest
 from forwardkinematics.urdfFks.pandaFk import PandaFk
 from forwardkinematics.urdfFks.mobilePandaFk import MobilePandaFk
 
-n = 10
-
 @pytest.fixture
 def fk():
-    return MobilePandaFk(n)
+    return MobilePandaFk()
 
 def test_mobilePandaFk(fk):
-    q_ca = ca.SX.sym("q", n)
-    q_np = np.random.random(n)
-    fkCasadi = fk.fk(q_ca, n, positionOnly=False)
-    fkNumpy = fk.fk(q_np, n, positionOnly=False)
+    q_ca = ca.SX.sym("q", fk.n())
+    q_np = np.random.random(fk.n())
+    fkCasadi = fk.fk(q_ca, fk.n(), positionOnly=False)
+    fkNumpy = fk.fk(q_np, fk.n(), positionOnly=False)
     assert isinstance(fkCasadi, ca.SX)
     assert isinstance(fkNumpy, np.ndarray)
 

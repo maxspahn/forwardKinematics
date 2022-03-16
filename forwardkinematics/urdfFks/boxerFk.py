@@ -4,7 +4,7 @@ from forwardkinematics.urdfFks.urdfFk import URDFForwardKinematics
 
 
 class BoxerFk(URDFForwardKinematics):
-    def __init__(self, n):
+    def __init__(self):
         fileName = "boxer.urdf"
         relevantLinks = ["world", "ee_link", "ee_link", "ee_link"]
         super().__init__(fileName, relevantLinks, "world", 3)

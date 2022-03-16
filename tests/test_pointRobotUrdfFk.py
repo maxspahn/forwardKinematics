@@ -6,7 +6,7 @@ import pytest
 
 @pytest.fixture
 def fk():
-    return PointRobotUrdfFk(3)
+    return PointRobotUrdfFk()
 
 
 def test_fkZeros(fk):

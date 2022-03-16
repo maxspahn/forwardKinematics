@@ -4,7 +4,7 @@ from forwardkinematics.urdfFks.urdfFk import URDFForwardKinematics
 
 
 class PointRobotUrdfFk(URDFForwardKinematics):
-    def __init__(self, n):
+    def __init__(self):
         fileName = "pointRobot.urdf"
         relevantLinks = ["world", "base_link", "base_link", "base_link"]
         super().__init__(fileName, relevantLinks, "world", 3)

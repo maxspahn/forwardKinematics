@@ -6,7 +6,7 @@ import pytest
 
 @pytest.fixture
 def fk():
-    return BoxerFk(3)
+    return BoxerFk()
 
 
 def test_fkZeros(fk):

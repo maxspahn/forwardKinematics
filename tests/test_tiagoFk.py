@@ -6,7 +6,7 @@ import pytest
 
 @pytest.fixture
 def fk():
-    return TiagoFk(20)
+    return TiagoFk()
 
 
 def test_fkZeros(fk):
@@ -66,7 +66,7 @@ def test_fkNonZeros(fk):
 
 def test_arm(fk):
     q_np = np.zeros(fk.n())
-    q_np[5] = -1.0
+    q_np[7] = -1.0
     fkNumpy = fk.fk(q_np, 11, positionOnly=True)
     x = np.array([-0.0544357, 0.676733, 1.15136])
     assert fkNumpy[0] == pytest.approx(x[0], abs=1e-4)

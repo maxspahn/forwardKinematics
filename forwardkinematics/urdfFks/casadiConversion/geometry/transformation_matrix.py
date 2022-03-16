@@ -96,41 +96,6 @@ def revolute(xyz, rpy, axis, qi):
     T[3, 3] = 1.0
     return T
 
-
-def full_symbolic(xyz, rpy):
-    """Gives a symbolic transformation matrix."""
-    T = cs.SX.zeros(4, 4)
-    cr = cs.cos(rpy[0])
-    sr = cs.sin(rpy[0])
-    cp = cs.cos(rpy[1])
-    sp = cs.sin(rpy[1])
-    cy = cs.cos(rpy[2])
-    sy = cs.sin(rpy[2])
-    T[0, 0] = cy*cp
-    T[0, 1] = cy*sp*sr - sy*cr
-    T[0, 2] = cy*sp*cr + sy*sr
-    T[1, 0] = sy*cp
-    T[1, 1] = sy*sp*sr + cy*cr
-    T[1, 2] = sy*sp*cr - cy*sr
-    T[2, 0] = -sp
-    T[2, 1] = cp*sr
-    T[2, 2] = cp*cr
-    T[0, 3] = xyz[0]
-    T[1, 3] = xyz[1]
-    T[2, 3] = xyz[2]
-    T[3, 3] = 1.0
-    return T
-
-
-def numpy_normalize(v):
-    nv = np.linalg.norm(v)
-    if nv > 0.0:
-        v[0] = v[0]/nv
-        v[1] = v[1]/nv
-        v[2] = v[2]/nv
-    return v
-
-
 def numpy_skew_symmetric(v):
     """Returns a skew symmetric matrix from vector. p q r"""
     return np.array([[0, -v[2], v[1]],
@@ -159,8 +124,3 @@ def numpy_rpy(displacement, roll, pitch, yaw):
     T[3, 3] = 1.0
     return T
 
-
-def numpy_rotation_distance_from_identity(R1, R2):
-    """Rotation matrix distance based on distance from identity matrix.
-    See comparisons at: https://link.springer.com/content/pdf/10.1007%2Fs10851-009-0161-2.pdf"""
-    return np.linalg.norm(np.eye(1) - np.dot(R1, R2.T))

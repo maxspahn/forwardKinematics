@@ -4,7 +4,7 @@ from forwardkinematics.fksCommon.fk import ForwardKinematics
 
 
 class PointFk(ForwardKinematics):
-    def __init__(self, n):
+    def __init__(self):
         super().__init__()
         self._n = 2
 

@@ -504,7 +504,7 @@
       <inertia ixx="0.000232" ixy="-0.000005" ixz="-0.000032" iyy="0.000224" iyz="0.000036" izz="0.000029"/>
     </inertial>
   </link>
-  <joint name="gripper_left_right_finger_joint" type="prismatic">
+  <joint name="gripper_left_right_finger_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0. 0 0"/>
     <parent link="gripper_left_link"/>
     <child link="gripper_left_right_finger_link"/>
@@ -521,7 +521,7 @@
       <inertia ixx="0.000232" ixy="-0.000005" ixz="-0.000032" iyy="0.000224" iyz="0.000036" izz="0.000029"/>
     </inertial>
   </link>
-  <joint name="gripper_left_left_finger_joint" type="prismatic">
+  <joint name="gripper_left_left_finger_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0. 0 0"/>
     <parent link="gripper_left_link"/>
     <child link="gripper_left_left_finger_link"/>
@@ -745,7 +745,7 @@
       <inertia ixx="0.000232" ixy="-0.000005" ixz="-0.000032" iyy="0.000224" iyz="0.000036" izz="0.000029"/>
     </inertial>
   </link>
-  <joint name="gripper_right_right_finger_joint" type="prismatic">
+  <joint name="gripper_right_right_finger_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0. 0 0"/>
     <parent link="gripper_right_link"/>
     <child link="gripper_right_right_finger_link"/>
@@ -762,7 +762,7 @@
       <inertia ixx="0.000232" ixy="-0.000005" ixz="-0.000032" iyy="0.000224" iyz="0.000036" izz="0.000029"/>
     </inertial>
   </link>
-  <joint name="gripper_right_left_finger_joint" type="prismatic">
+  <joint name="gripper_right_left_finger_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0. 0 0"/>
     <parent link="gripper_right_link"/>
     <child link="gripper_right_left_finger_link"/>

@@ -6,7 +6,7 @@ import pytest
 
 @pytest.fixture
 def fk():
-    return AlbertFk(10)
+    return AlbertFk()
 
 
 def test_fkZeros(fk):
@@ -72,7 +72,7 @@ def test_arm(fk):
 
 
 def test_comparePanda(fk):
-    fkPanda = PandaFk(7)
+    fkPanda = PandaFk()
     q_np = np.array(
         [0, 0, 0, 0.0000, 1.0323, 0.0000, 0.8247, 0.0000, 0.2076, 0.0000]
     )

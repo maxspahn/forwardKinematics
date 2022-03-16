@@ -5,7 +5,7 @@ from forwardkinematics.planarFks.pointFk import PointFk
 
 def test_pointFk():
     q_ca = ca.SX.sym("q", 2)
-    fkPoint = PointFk(2)
+    fkPoint = PointFk()
     q_np = np.array([3.0, 0.0])
     fkCasadi = fkPoint.fk(q_ca, 1, positionOnly=True)
     fkNumpy = fkPoint.fk(q_np, 1, positionOnly=True)

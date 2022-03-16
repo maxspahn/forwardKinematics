@@ -5,7 +5,7 @@ from forwardkinematics.planarFks.planarArmFk import PlanarArmFk
 
 def test_planarFk():
     q_ca = ca.SX.sym("q", 2)
-    fkPlanar = PlanarArmFk(2)
+    fkPlanar = PlanarArmFk(n=2)
     q_np = np.array([1.0, 0.0])
     fkCasadi = fkPlanar.fk(q_ca, 2, positionOnly=False)
     fkNumpy = fkPlanar.fk(q_np, 2, positionOnly=False)

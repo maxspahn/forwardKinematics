@@ -6,7 +6,7 @@ from forwardkinematics.urdfFks.pandaFk import PandaFk
 
 @pytest.fixture
 def fk():
-    return PandaFk(7)
+    return PandaFk()
 
 def test_pandaFk(fk):
     q_ca = ca.SX.sym("q", 7)

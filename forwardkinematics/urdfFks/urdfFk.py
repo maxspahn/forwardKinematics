@@ -15,14 +15,15 @@ class URDFForwardKinematics(ForwardKinematics):
         )
         self._links = links
         self._rootLink = rootLink
+        self._q_ca = ca.SX.sym("q", n)
         self.readURDF()
         self._n = n
-        self._q_ca = ca.SX.sym("q", n)
         self.generateFunctions()
 
     def readURDF(self):
         self.robot = u2c.URDFparser()
         self.robot.from_file(self._urdf_file)
+        self.robot.set_joint_variable_map(self._q_ca)
 
     def generateFunctions(self):
         fks = []

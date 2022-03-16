@@ -41,11 +41,11 @@ class URDFparser(object):
                 actuated_joints_names.append(joint.name)
         return actuated_joints_names
 
-    def set_joint_variable_map(self, q: cs.SX) -> None:
+    def set_joint_variable_map(self) -> None:
         joint_names = self.get_all_actuated_joints()
         self._joint_map = {}
         for i, joint_name in enumerate(joint_names):
-            self._joint_map[joint_name] = q[i]
+            self._joint_map[joint_name] = i
         
 
     def get_joint_info(self, root, tip):
@@ -126,7 +126,7 @@ class URDFparser(object):
                 # axis = (1./cs.np.linalg.norm(axis))*axis
                 joint_frame = T.prismatic(joint.origin.xyz,
                                           joint.origin.rpy,
-                                          joint.axis, self._joint_map[joint.name])
+                                          joint.axis, q[self._joint_map[joint.name]])
                 T_fk = cs.mtimes(T_fk, joint_frame)
 
             elif joint.type in ["revolute", "continuous"]:
@@ -138,7 +138,7 @@ class URDFparser(object):
                 joint_frame = T.revolute(
                     joint.origin.xyz,
                     joint.origin.rpy,
-                    joint.axis, self._joint_map[joint.name])
+                    joint.axis, q[self._joint_map[joint.name]])
                 T_fk = cs.mtimes(T_fk, joint_frame)
         #T_fk = cs.Function("T_fk", [q], [T_fk], self.func_opts)
         return {

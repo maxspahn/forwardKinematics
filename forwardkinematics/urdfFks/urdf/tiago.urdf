@@ -27,7 +27,7 @@
     <limit effort="100" lower="-15" upper="15" velocity="5"/>
   </joint>
   <joint name="base_add_orientation" type="fixed">
-    <origin rpy="0 0 0" xyz="0.0 0 0"/>
+    <origin rpy="0 0 0" xyz="-0.18 0 0.10"/>
     <parent link="base_link_ori"/>
     <child link="base_link"/>
   </joint>
@@ -535,7 +535,7 @@
   <joint name="gripper_left_grasping_frame_joint" type="fixed">
     <parent link="gripper_left_link"/>
     <child link="gripper_left_grasping_frame"/>
-    <origin rpy="-1.5708 1.5708 0" xyz="0 0 -0.12"/>
+    <origin rpy="-1.5708 1.5708 0" xyz="0 0 -0.20"/>
   </joint>
   <link name="gripper_left_grasping_frame">
     <inertial>
@@ -776,7 +776,7 @@
   <joint name="gripper_right_grasping_frame_joint" type="fixed">
     <parent link="gripper_right_link"/>
     <child link="gripper_right_grasping_frame"/>
-    <origin rpy="-1.5708 1.5708 0" xyz="0 0 -0.12"/>
+    <origin rpy="-1.5708 1.5708 0" xyz="0 0 -0.20"/>
   </joint>
   <link name="gripper_right_grasping_frame">
     <inertial>

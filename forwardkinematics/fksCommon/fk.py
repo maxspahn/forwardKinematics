@@ -1,5 +1,4 @@
 from abc import abstractmethod, ABC
-import os
 import numpy as np
 import casadi as ca
 

@@ -3,10 +3,15 @@ import numpy as np
 import pytest 
 
 from forwardkinematics.urdfFks.pandaFk import PandaFk
+from forwardkinematics.urdfFks.panda_fk_by_name import PandaFkByName
 
 @pytest.fixture
 def fk():
     return PandaFk()
+
+@pytest.fixture
+def fk_by_name():
+    return PandaFkByName()
 
 def test_pandaFk(fk):
     q_ca = ca.SX.sym("q", 7)
@@ -15,6 +20,12 @@ def test_pandaFk(fk):
     fkNumpy = fk.fk(q_np, 7, positionOnly=False)
     assert isinstance(fkCasadi, ca.SX)
     assert isinstance(fkNumpy, np.ndarray)
+
+def test_pandaFkByName(fk_by_name):
+    q_ca = ca.SX.sym('q', 7)
+    q_np = np.random.random(7)
+    fkCasadi = fk_by_name.fk(q_ca, 'panda_link3', positionOnly=False)
+    assert isinstance(fkCasadi, ca.SX)
 
 def test_simpleFk(fk):
     q_np = np.array([0.0000, 1.0323, 0.0000, 0.8247, 0.0000, 0.2076, 0.0000])

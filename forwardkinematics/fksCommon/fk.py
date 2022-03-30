@@ -26,3 +26,5 @@ class ForwardKinematics(ABC):
     @abstractmethod
     def numpy(self, q: np.ndarray, i, positionOnly=False):
         pass
+
+

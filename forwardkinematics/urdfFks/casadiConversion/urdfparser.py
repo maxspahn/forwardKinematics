@@ -84,6 +84,15 @@ class URDFparser(object):
 
         return joint_list, actuated_names, upper, lower
 
+    def link_names(self):
+        link_names = []
+        for link in self.robot_desc.links:
+            if link.name in self.robot_desc.parent_map:
+                link_names.append(link.name)
+            else:
+                print(f"Link with name {link.name} does not has a parent. Link name is skipped.")
+        return link_names
+
 
     def get_n_joints(self, root, tip):
         """Returns number of actuated joints."""

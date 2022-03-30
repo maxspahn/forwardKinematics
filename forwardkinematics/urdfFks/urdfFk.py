@@ -4,10 +4,9 @@ import numpy as np
 import casadi as ca
 import forwardkinematics.urdfFks.casadiConversion.urdfparser as u2c
 
-from forwardkinematics.fksCommon.fk_by_name import ForwardKinematicsByName
+from forwardkinematics.fksCommon.fk import ForwardKinematics
 
-
-class URDFForwardKinematics(ForwardKinematicsByName):
+class URDFForwardKinematics(ForwardKinematics):
     def __init__(self, fileName, links, rootLink, n):
         super().__init__()
         self._urdf_file = (
@@ -26,12 +25,22 @@ class URDFForwardKinematics(ForwardKinematicsByName):
         self.robot.set_joint_variable_map()
 
     def generateFunctions(self):
-        fks = []
-        for i in range(self._n + 1):
-            fks.append(self.casadi(self._q_ca, i))
-        self._fks_fun = ca.Function("fk", [self._q_ca], fks)
+        self._fks = {}
+        for link in self.robot.link_names():
+            ca_fun = ca.Function("fk"+link, [self._q_ca], [self.casadiByName(self._q_ca, link)])
+            self._fks[link] = ca_fun
 
-    def casadi(self, q: ca.SX, link: str, positionOnly=False):
+    def fk_by_name(self, q: ca.SX, link: str, positionOnly=False):
+        if isinstance(q, ca.SX):
+            return self.casadiByName(q, link, positionOnly=positionOnly)
+        elif isinstance(q, np.ndarray):
+            return self.numpyByName(q, link, positionOnly=positionOnly)
+
+
+    def casadi(self, q: ca.SX, i: int, positionOnly=False):
+        return self.casadiByName(q, self._links[i], positionOnly=positionOnly)
+
+    def casadiByName(self, q: ca.SX, link: str, positionOnly=False):
         if positionOnly:
             return self.robot.get_forward_kinematics(self._rootLink, link, q)["T_fk"][
                 0:3, 3
@@ -39,10 +48,18 @@ class URDFForwardKinematics(ForwardKinematicsByName):
         else:
             return self.robot.get_forward_kinematics(self._rootLink, link, q)["T_fk"]
 
-    def numpy(self, q: np.ndarray, link, positionOnly=False):
-        # TODO: If the function is composed at runtime, this will be very slow. Therefore, the fk functions should be generated for all possible links. Then at runtime, the right function is accessed. This could be solved using a dict.<29-03-22, mspahn> #
-        i = 3 # replaced with a mapping i = self._linkMap[link]
-        if positionOnly:
-            return np.array(self._fks_fun(q)[i])[0:3, 3]
-        else:
-            return np.array(self._fks_fun(q)[i])
+    def numpy(self, q: ca.SX, i: int, positionOnly=False):
+        return self.numpyByName(q, self._links[i], positionOnly=positionOnly)
+
+    def numpyByName(self, q: np.ndarray, link: str, positionOnly=False):
+        try:
+            if positionOnly:
+                return np.array(self._fks[link](q))[0:3, 3]
+            else:
+                return np.array(self._fks[link](q))
+        except KeyError as e:
+            print(f"No link with name {link} found in the list of functions. Returning identity.")
+            if positionOnly:
+                return np.zeros(3)
+            else:
+                return np.identity(4)

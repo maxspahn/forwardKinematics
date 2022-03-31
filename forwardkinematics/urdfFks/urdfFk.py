@@ -59,14 +59,15 @@ class URDFForwardKinematics(ForwardKinematics):
         return self.numpy_by_name(q, self._links[i], positionOnly=positionOnly)
 
     def numpy_by_name(self, q: np.ndarray, link: str, positionOnly=False):
-        try:
-            if positionOnly:
-                return np.array(self._fks[link](q))[0:3, 3]
-            else:
-                return np.array(self._fks[link](q))
-        except KeyError as e:
-            print(f"Error {e}. No link with name {link} found in the list of functions. Returning identity.")
-            if positionOnly:
-                return np.zeros(3)
-            else:
-                return np.identity(4)
+        if link not in self.robot.link_names():
+            print(f"The link you have requested, {link}, is not in the urdf.")
+            cli = cmd.Cmd()
+            print("Possible links are")
+            print("----")
+            cli.columnize(self.robot.link_names(), displaywidth=10)
+            print("----")
+            return
+        if positionOnly:
+            return np.array(self._fks[link](q))[0:3, 3]
+        else:
+            return np.array(self._fks[link](q))

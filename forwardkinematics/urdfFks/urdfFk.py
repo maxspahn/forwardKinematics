@@ -1,4 +1,3 @@
-from abc import abstractmethod, ABC
 import os
 import numpy as np
 import casadi as ca
@@ -27,39 +26,39 @@ class URDFForwardKinematics(ForwardKinematics):
     def generateFunctions(self):
         self._fks = {}
         for link in self.robot.link_names():
-            ca_fun = ca.Function("fk"+link, [self._q_ca], [self.casadiByName(self._q_ca, link)])
+            ca_fun = ca.Function("fk"+link, [self._q_ca], [self.casadi_by_name(self._q_ca, link)])
             self._fks[link] = ca_fun
 
-    def fk_by_name(self, q: ca.SX, link: str, positionOnly=False):
+    def fk_by_name(self, q: ca.SX, link: str, position_only=False):
         if isinstance(q, ca.SX):
-            return self.casadiByName(q, link, positionOnly=positionOnly)
+            return self.casadiByName(q, link, position_only=position_only)
         elif isinstance(q, np.ndarray):
-            return self.numpyByName(q, link, positionOnly=positionOnly)
+            return self.numpyByName(q, link, position_only=position_only)
 
 
-    def casadi(self, q: ca.SX, i: int, positionOnly=False):
-        return self.casadiByName(q, self._links[i], positionOnly=positionOnly)
+    def casadi(self, q: ca.SX, i: int, position_only=False):
+        return self.casadi_by_name(q, self._links[i], position_only=position_only)
 
-    def casadiByName(self, q: ca.SX, link: str, positionOnly=False):
-        if positionOnly:
+    def casadi_by_name(self, q: ca.SX, link: str, position_only=False):
+        if position_only:
             return self.robot.get_forward_kinematics(self._rootLink, link, q)["T_fk"][
                 0:3, 3
             ]
         else:
             return self.robot.get_forward_kinematics(self._rootLink, link, q)["T_fk"]
 
-    def numpy(self, q: ca.SX, i: int, positionOnly=False):
-        return self.numpyByName(q, self._links[i], positionOnly=positionOnly)
+    def numpy(self, q: ca.SX, i: int, position_only=False):
+        return self.numpy_by_name(q, self._links[i], position_only=position_only)
 
-    def numpyByName(self, q: np.ndarray, link: str, positionOnly=False):
+    def numpy_by_name(self, q: np.ndarray, link: str, position_only=False):
         try:
-            if positionOnly:
+            if position_only:
                 return np.array(self._fks[link](q))[0:3, 3]
             else:
                 return np.array(self._fks[link](q))
         except KeyError as e:
-            print(f"No link with name {link} found in the list of functions. Returning identity.")
-            if positionOnly:
+            print(f"Error {e}. No link with name {link} found in the list of functions. Returning identity.")
+            if position_only:
                 return np.zeros(3)
             else:
                 return np.identity(4)

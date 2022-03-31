@@ -25,6 +25,7 @@ class URDFparser(object):
     def from_file(self, filename):
         """Uses an URDF file to get robot description."""
         self.robot_desc = URDF.from_xml_file(filename)
+        self.detect_link_names()
 
     def from_server(self, key="robot_description"):
         """Uses a parameter server to get robot description."""
@@ -85,13 +86,16 @@ class URDFparser(object):
         return joint_list, actuated_names, upper, lower
 
     def link_names(self):
-        link_names = []
+        return self._link_names
+
+    def detect_link_names(self):
+        self._link_names = []
         for link in self.robot_desc.links:
             if link.name in self.robot_desc.parent_map:
-                link_names.append(link.name)
+                self._link_names.append(link.name)
             else:
                 print(f"Link with name {link.name} does not has a parent. Link name is skipped.")
-        return link_names
+        return self._link_names
 
 
     def get_n_joints(self, root, tip):

@@ -66,7 +66,10 @@ class URDFForwardKinematics(ForwardKinematics):
             print("----")
             cli.columnize(self.robot.link_names(), displaywidth=10)
             print("----")
-            return
+            if positionOnly:
+                return np.zeros(3)
+            else:
+                return np.identity(4)
         if positionOnly:
             return np.array(self._fks[link](q))[0:3, 3]
         else:

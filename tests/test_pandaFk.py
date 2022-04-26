@@ -16,6 +16,17 @@ def test_pandaFk(fk):
     assert isinstance(fkCasadi, ca.SX)
     assert isinstance(fkNumpy, np.ndarray)
 
+def test_pandaFkByName(fk):
+    q_ca = ca.SX.sym('q', 7)
+    q_np = np.random.random(7)
+    fkCasadi = fk.fk_by_name(q_ca, 'panda_link3', positionOnly=False)
+    assert isinstance(fkCasadi, ca.SX)
+
+def test_pandafkByWrongName(fk):
+    q_ca = ca.SX.sym('q', 7)
+    fkCasadi = fk.fk_by_name(q_ca, 'panda_link10', positionOnly=False)
+    assert fkCasadi is None
+
 def test_simpleFk(fk):
     q_np = np.array([0.0000, 1.0323, 0.0000, 0.8247, 0.0000, 0.2076, 0.0000])
     fkNumpy = fk.fk(q_np, 0, positionOnly=True)

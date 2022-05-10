@@ -278,16 +278,8 @@ htmlsoup = ["beautifulsoup4"]
 source = ["Cython (>=0.29.7)"]
 
 [[package]]
-name = "mccabe"
-version = "0.7.0"
-description = "McCabe checker, plugin for flake8"
-category = "main"
-optional = false
-python-versions = ">=3.6"
-
-[[package]]
 name = "motion-planning-scenes"
-version = "0.1.16"
+version = "0.1.6"
 description = "Generic motion planning scenes, including goals and obstacles."
 category = "main"
 optional = true

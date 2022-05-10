@@ -25,6 +25,7 @@ class URDFparser(object):
     def from_file(self, filename):
         """Uses an URDF file to get robot description."""
         self.robot_desc = URDF.from_xml_file(filename)
+        self.detect_link_names()
 
     def from_server(self, key="robot_description"):
         """Uses a parameter server to get robot description."""

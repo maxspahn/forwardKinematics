@@ -70,6 +70,25 @@ def test_arm(fk):
     assert fkPanda[1] == pytest.approx(x_ee[1], abs=1e-4)
     assert fkPanda[2] == pytest.approx(x_ee[2], abs=1e-4)
 
+def test_arm_by_name(fk):
+    q_np = np.array(
+        [0, 0, 0, 0.0000, 1.0323, 0.0000, 0.8247, 0.0000, 0.2076, 0.0000]
+    )
+    T_base = fk.fk(q_np, "panda_link0", positionOnly=False)
+    T_base_inv = np.linalg.inv(T_base)
+    T = fk.fk(q_np, "panda_link0", positionOnly=False)
+    fkPanda = np.dot(T_base_inv, T)[0:3, 3]
+    x_ee = np.array([0.0, 0.0, 0.0])
+    assert fkPanda[0] == pytest.approx(x_ee[0], abs=1e-4)
+    assert fkPanda[1] == pytest.approx(x_ee[1], abs=1e-4)
+    assert fkPanda[2] == pytest.approx(x_ee[2], abs=1e-4)
+    T = fk.fk(q_np, "panda_link3", positionOnly=False)
+    fkPanda = np.dot(T_base_inv, T)[0:3, 3]
+    x_ee = np.array([0.2713, 0.0, 0.4950])
+    assert fkPanda[0] == pytest.approx(x_ee[0], abs=1e-4)
+    assert fkPanda[1] == pytest.approx(x_ee[1], abs=1e-4)
+    assert fkPanda[2] == pytest.approx(x_ee[2], abs=1e-4)
+
 
 def test_comparePanda(fk):
     fkPanda = PandaFk()
@@ -81,6 +100,20 @@ def test_comparePanda(fk):
     for i in range(7):
         fk_panda = fkPanda.fk(q_np[3:], i, positionOnly=True)
         T_albert = fk.fk(q_np, i+3, positionOnly=False)
+        fk_numpy = np.dot(T_base_inv, T_albert)[0:3, 3]
+        for j in range(3):
+            assert fk_panda[j] == pytest.approx(fk_numpy[j], abs=1e-4)
+
+def test_comparePanda_by_name(fk):
+    fkPanda = PandaFk()
+    q_np = np.array(
+        [0, 0, 0, 0.0000, 1.0323, 0.0000, 0.8247, 0.0000, 0.2076, 0.0000]
+    )
+    T_base = fk.fk(q_np, "panda_link0", positionOnly=False)
+    T_base_inv = np.linalg.inv(T_base)
+    for i in range(7):
+        fk_panda = fkPanda.fk(q_np[3:], f"panda_link{i}", positionOnly=True)
+        T_albert = fk.fk(q_np, f"panda_link{i}", positionOnly=False)
         fk_numpy = np.dot(T_base_inv, T_albert)[0:3, 3]
         for j in range(3):
             assert fk_panda[j] == pytest.approx(fk_numpy[j], abs=1e-4)

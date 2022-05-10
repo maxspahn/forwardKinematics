@@ -21,7 +21,7 @@ class GenericURDFFk(URDFForwardKinematics):
         self.robot.set_joint_variable_map()
 
 
-    def casadi_by_name(self, q: ca.SX, parent_link: str, child_link: str, positionOnly=False):
+    def casadi(self, q: ca.SX, parent_link: str, child_link: str, positionOnly=False):
         if child_link not in self.robot.link_names():
             print(f"The link you have requested, {child_link}, is not in the urdf.")
             cli = cmd.Cmd()
@@ -37,17 +37,18 @@ class GenericURDFFk(URDFForwardKinematics):
         else:
             return self.robot.get_forward_kinematics(parent_link, child_link, q)["T_fk"]
 
-    def fk_by_name(self, q: ca.SX, parent_link: str, child_link: str, positionOnly=False):
+    def fk(self, q: ca.SX, parent_link: str, child_link: str, positionOnly=False):
         if isinstance(q, ca.SX):
-            return self.casadi_by_name(q, parent_link, child_link, positionOnly=positionOnly)
+            return self.casadi(q, parent_link, child_link, positionOnly=positionOnly)
         elif isinstance(q, np.ndarray):
-            return self.numpy_by_name(q, child_link, positionOnly=positionOnly)
+            return self.numpy(q, parent_link, child_link, positionOnly=positionOnly)
 
-    def generateFunctions(self):
-        print("Generating functions is not supported supported for generic fk.")
+    def numpy(self, q: ca.SX, parent_link: str, child_link: str, positionOnly=False):
+        fk_parent = super().numpy_by_name(q, parent_link)
+        fk_child = super().numpy_by_name(q, child_link)
+        tf_parent_child = np.dot(np.linalg.inv(fk_parent), fk_child)
+        if positionOnly:
+            return tf_parent_child[0:3, 3]
+        else:
+            return tf_parent_child
 
-    def numpy(self, q: ca.SX, i: int, positionOnly=False):
-        print("Not supported for generic fk.")
-
-    def numpy_by_name(self, q: np.ndarray, link: str, positionOnly=False):
-        print("Numpy fk is not supported for generic fk.")

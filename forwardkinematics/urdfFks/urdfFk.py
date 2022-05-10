@@ -31,6 +31,12 @@ class URDFForwardKinematics(ForwardKinematics):
             ca_fun = ca.Function("fk"+link, [self._q_ca], [self.casadi_by_name(self._q_ca, link)])
             self._fks[link] = ca_fun
 
+    def fk(self, q, link: str, positionOnly: bool=False):
+        if isinstance(link, str):
+            return self.fk_by_name(q, link, positionOnly=positionOnly)
+        else:
+            return super().fk(q, link, positionOnly=positionOnly)
+
     def fk_by_name(self, q: ca.SX, link: str, positionOnly=False):
         if isinstance(q, ca.SX):
             return self.casadi_by_name(q, link, positionOnly=positionOnly)

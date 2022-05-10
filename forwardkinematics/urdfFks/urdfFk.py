@@ -22,6 +22,7 @@ class URDFForwardKinematics(ForwardKinematics):
     def readURDF(self):
         self.robot = u2c.URDFparser()
         self.robot.from_file(self._urdf_file)
+        self.robot.detect_link_names()
         self.robot.set_joint_variable_map()
 
     def generateFunctions(self):
@@ -29,6 +30,12 @@ class URDFForwardKinematics(ForwardKinematics):
         for link in self.robot.link_names():
             ca_fun = ca.Function("fk"+link, [self._q_ca], [self.casadi_by_name(self._q_ca, link)])
             self._fks[link] = ca_fun
+
+    def fk(self, q, link: str, positionOnly: bool=False):
+        if isinstance(link, str):
+            return self.fk_by_name(q, link, positionOnly=positionOnly)
+        else:
+            return super().fk(q, link, positionOnly=positionOnly)
 
     def fk_by_name(self, q: ca.SX, link: str, positionOnly=False):
         if isinstance(q, ca.SX):

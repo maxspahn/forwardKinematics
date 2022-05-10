@@ -22,6 +22,7 @@ class URDFForwardKinematics(ForwardKinematics):
     def readURDF(self):
         self.robot = u2c.URDFparser()
         self.robot.from_file(self._urdf_file)
+        self.robot.detect_link_names()
         self.robot.set_joint_variable_map()
 
     def generateFunctions(self):

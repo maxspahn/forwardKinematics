@@ -2,8 +2,9 @@ import numpy as np
 import casadi as ca
 import cmd
 from forwardkinematics.urdfFks.urdfFk import URDFForwardKinematics
+import forwardkinematics.urdfFks.casadiConversion.urdfparser as u2c
 
-class GenericFk(URDFForwardKinematics):
+class GenericURDFFk(URDFForwardKinematics):
     def __init__(self, fileName, rootLink='base_link'):
         self._urdf_file = fileName
         self._links = []
@@ -12,6 +13,12 @@ class GenericFk(URDFForwardKinematics):
         self._n = len(self.robot.get_all_actuated_joints())
         self._q_ca = ca.SX.sym("q", self._n)
         self.generateFunctions()
+
+    def readURDF(self):
+        self.robot = u2c.URDFparser()
+        self.robot.from_string(self._urdf_file)
+        self.robot.detect_link_names()
+        self.robot.set_joint_variable_map()
 
 
     def casadi_by_name(self, q: ca.SX, parent_link: str, child_link: str, positionOnly=False):

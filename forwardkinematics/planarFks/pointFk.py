@@ -1,14 +1,18 @@
 import numpy as np
 import casadi as ca
-from forwardkinematics.fksCommon.fk import ForwardKinematics
+from forwardkinematics.planarFks.planar_fk import ForwardKinematicsPlanar
 
 
-class PointFk(ForwardKinematics):
+class PointFk(ForwardKinematicsPlanar):
     def __init__(self):
         super().__init__()
         self._n = 2
 
-    def fk(self, q, i, positionOnly=False, endlink=0.0):
+    def fk(self, q, link, positionOnly: bool=False, endlink=0.0):
+        if isinstance(link, str):
+            i = self.get_link_index(link)
+        else:
+            i = link
         assert i <= self._n
         if isinstance(q, ca.SX):
             assert q.shape[0] == self._n

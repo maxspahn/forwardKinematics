@@ -1,21 +1,12 @@
 import numpy as np
 import casadi as ca
-from forwardkinematics.fksCommon.fk import ForwardKinematics
+from forwardkinematics.planarFks.planar_fk import ForwardKinematicsPlanar
 
 
-class PlanarArmFk(ForwardKinematics):
+class PlanarArmFk(ForwardKinematicsPlanar):
     def __init__(self, n):
         super().__init__()
         self._n = n
-
-    def fk(self, q, i, positionOnly=False, endlink=0.0):
-        assert i <= self._n
-        if isinstance(q, ca.SX):
-            assert q.shape[0] == self._n
-            return self.casadi(q, i, positionOnly=positionOnly, endlink=endlink)
-        elif isinstance(q, np.ndarray):
-            assert q.size == self._n
-            return self.numpy(q, i, positionOnly=positionOnly, endlink=endlink)
 
     def casadi(self, q, i, positionOnly=False, endlink=0.0):
         fk = ca.vertcat(np.zeros(2), q[0])

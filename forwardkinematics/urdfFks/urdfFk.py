@@ -1,5 +1,6 @@
 from abc import abstractmethod, ABC
 import os
+import cmd
 import numpy as np
 import casadi as ca
 import forwardkinematics.urdfFks.casadiConversion.urdfparser as u2c

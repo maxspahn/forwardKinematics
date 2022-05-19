@@ -17,8 +17,9 @@ class URDFparser(object):
     if system() == "darwin" or machine() == "aarch64":
         func_opts["compiler"] = "shell"
     
-    def __init__(self, func_opts=None):
-        self.robot_desc = None
+    def __init__(self, rootLink: str="base_link", func_opts=None):
+        #self.robot_desc = None
+        self._rootLink = rootLink
         if func_opts:
             self.func_opts = func_opts
 
@@ -26,14 +27,20 @@ class URDFparser(object):
         """Uses an URDF file to get robot description."""
         self.robot_desc = URDF.from_xml_file(filename)
         self.detect_link_names()
+        self._absolute_root_link = self.robot_desc.get_root()
+        self.set_active_joints()
 
     def from_server(self, key="robot_description"):
         """Uses a parameter server to get robot description."""
         self.robot_desc = URDF.from_parameter_server(key=key)
+        self._absolute_root_link = self.robot_desc.get_root()
+        self.set_active_joints()
 
     def from_string(self, urdfstring):
         """Uses a URDF string to get robot description."""
         self.robot_desc = URDF.from_xml_string(urdfstring)
+        self._absolute_root_link = self.robot_desc.get_root()
+        self.set_active_joints()
 
     def get_all_actuated_joints(self) -> list:
         actuated_joints_names = []
@@ -43,10 +50,31 @@ class URDFparser(object):
         return actuated_joints_names
 
     def set_joint_variable_map(self) -> None:
-        joint_names = self.get_all_actuated_joints()
+        joint_names = self.get_active_joints()
+        actuated_joints = self.get_all_actuated_joints()
         self._joint_map = {}
-        for i, joint_name in enumerate(joint_names):
-            self._joint_map[joint_name] = i
+        index = 0
+        for joint_name in joint_names:
+            if joint_name in actuated_joints:
+                self._joint_map[joint_name] = index
+                index += 1
+
+    def is_active_joint(self, joint):
+        parent_link = joint.parent
+        while not (parent_link == self._rootLink or parent_link == self._absolute_root_link):
+            parent_link = self.robot_desc.parent_map[parent_link][1]
+        if parent_link == self._rootLink:
+            return True
+
+    def set_active_joints(self) -> None:
+        self._active_joints = []
+        actuated_joints = self.get_all_actuated_joints()
+        for joint in self.robot_desc.joints:
+            if self.is_active_joint(joint):
+                self._active_joints.append(joint.name)
+
+    def get_active_joints(self) -> list:
+        return self._active_joints
         
 
     def get_joint_info(self, root, tip):
@@ -59,29 +87,29 @@ class URDFparser(object):
         joint_list = []
         upper = []
         lower = []
-        actuated_names = []
+        actuated_names = self.get_all_actuated_joints()
 
         for item in chain:
             if item in self.robot_desc.joint_map:
                 joint = self.robot_desc.joint_map[item]
-                joint_list += [joint]
-                if joint.type in self.actuated_types:
-                    actuated_names += [joint.name]
-                    if joint.type == "continuous":
-                        upper += [cs.inf]
-                        lower += [-cs.inf]
-                    else:
-                        upper += [joint.limit.upper]
-                        lower += [joint.limit.lower]
-                    if joint.axis is None:
-                        joint.axis = [1., 0., 0.]
-                    if joint.origin is None:
-                        joint.origin = Pose(xyz=[0., 0., 0.],
-                                            rpy=[0., 0., 0.])
-                    elif joint.origin.xyz is None:
-                        joint.origin.xyz = [0., 0., 0.]
-                    elif joint.origin.rpy is None:
-                        joint.origin.rpy = [0., 0., 0.]
+                if joint.name in self._active_joints:
+                    joint_list += [joint]
+                    if joint.name in actuated_names:
+                        if joint.type == "continuous":
+                            upper += [cs.inf]
+                            lower += [-cs.inf]
+                        else:
+                            upper += [joint.limit.upper]
+                            lower += [joint.limit.lower]
+                        if joint.axis is None:
+                            joint.axis = [1., 0., 0.]
+                        if joint.origin is None:
+                            joint.origin = Pose(xyz=[0., 0., 0.],
+                                                rpy=[0., 0., 0.])
+                        elif joint.origin.xyz is None:
+                            joint.origin.xyz = [0., 0., 0.]
+                        elif joint.origin.rpy is None:
+                            joint.origin.rpy = [0., 0., 0.]
 
         return joint_list, actuated_names, upper, lower
 
@@ -114,16 +142,14 @@ class URDFparser(object):
 
     def get_forward_kinematics(self, root, tip, q):
         """Returns the forward kinematics as a casadi function."""
-        chain = self.robot_desc.get_chain(root, tip)
         if self.robot_desc is None:
             raise ValueError('Robot description not loaded from urdf')
         joint_list, actuated_names, upper, lower = self.get_joint_info(
-            root,
+            self._absolute_root_link,
             tip)
         T_fk = cs.SX.eye(4)
         # nvar = len(actuated_names)
         # q = cs.SX.sym("q", nvar)
-        i = 0
         for joint in joint_list:
             if joint.type == "fixed":
                 xyz = joint.origin.xyz

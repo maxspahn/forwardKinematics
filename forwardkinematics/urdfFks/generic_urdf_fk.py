@@ -9,13 +9,13 @@ class GenericURDFFk(URDFForwardKinematics):
         self._urdf_file = fileName
         self._links = []
         self._rootLink = rootLink
-        self.readURDF()
-        self._n = len(self.robot.get_all_actuated_joints())
+        self.readURDF(rootLink)
+        self._n = len(self.robot.get_active_joints())
         self._q_ca = ca.SX.sym("q", self._n)
         self.generateFunctions()
 
-    def readURDF(self):
-        self.robot = u2c.URDFparser()
+    def readURDF(self, rootLink: str):
+        self.robot = u2c.URDFparser(rootLink)
         self.robot.from_string(self._urdf_file)
         self.robot.detect_link_names()
         self.robot.set_joint_variable_map()

@@ -9,20 +9,21 @@ from forwardkinematics.fksCommon.fk import ForwardKinematics
 
 
 class URDFForwardKinematics(ForwardKinematics):
-    def __init__(self, fileName, links, rootLink, n):
+    def __init__(self, fileName, links, rootLink, end_links, n):
         super().__init__()
         self._urdf_file = (
             os.path.dirname(os.path.abspath(__file__)) + "/urdf/" + fileName
         )
         self._links = links
         self._rootLink = rootLink
+        self._end_links = end_links
         self._q_ca = ca.SX.sym("q", n)
         self.readURDF()
         self._n = n
         self.generateFunctions()
 
     def readURDF(self):
-        self.robot = u2c.URDFparser(rootLink=self._rootLink)
+        self.robot = u2c.URDFparser(rootLink=self._rootLink, end_links=self._end_links)
         self.robot.from_file(self._urdf_file)
         self.robot.detect_link_names()
         self.robot.set_joint_variable_map()

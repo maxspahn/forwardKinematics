@@ -12,13 +12,16 @@ class URDFparser(object):
     """Class that turns a chain from URDF to casadi functions."""
     actuated_types = ["prismatic", "revolute", "continuous"]
     
-    def __init__(self, rootLink: str="base_link", end_link: str = None):
+    def __init__(self, rootLink: str="base_link", end_links: list = None):
         self._rootLink = rootLink
-        self._end_link = end_link
+        if isinstance(end_links, str):
+            self._end_links = [end_links]
+        else:
+            self._end_links = end_links
 
     def extract_information(self):
         self._actuated_joints = []
-        self._active_joints = []
+        self._active_joints = set()
         self._degrees_of_freedom = 0
         self.detect_link_names()
         self._absolute_root_link = self.robot_desc.get_root()
@@ -50,6 +53,7 @@ class URDFparser(object):
         return self._degrees_of_freedom
 
     def extract_degrees_of_freedom(self) -> None:
+        self._degrees_of_freedom = 0
         for joint_name in self._active_joints:
             if joint_name in self._actuated_joints:
                 self._degrees_of_freedom += 1
@@ -62,28 +66,33 @@ class URDFparser(object):
     def set_joint_variable_map(self) -> None:
         self._joint_map = {}
         index = 0
-        for joint_name in self._active_joints:
-            if joint_name in self._actuated_joints:
+        for joint_name in self._actuated_joints:
+            if joint_name in self._active_joints:
                 self._joint_map[joint_name] = index
                 index += 1
 
     def is_active_joint(self, joint):
         parent_link = joint.parent
         while not (parent_link == self._rootLink or parent_link == self._absolute_root_link):
-            if parent_link == self._end_link:
+            if parent_link in self._end_links:
                 return False
-            parent_link = self.robot_desc.parent_map[parent_link][1]
+            parent_joint, parent_link = self.robot_desc.parent_map[parent_link]
+            if parent_joint in self._active_joints:
+                return True
 
         if parent_link == self._rootLink:
             return True
         return False
 
     def set_active_joints(self) -> None:
-        for joint in self.robot_desc.joints:
-            if self.is_active_joint(joint):
-                self._active_joints.append(joint.name)
-
-    def active_joints(self) -> list:
+        for parent_link in self._end_links:
+            while not (parent_link == self._rootLink or parent_link == self._absolute_root_link):
+                parent_joint, parent_link = self.robot_desc.parent_map[parent_link]
+                self._active_joints.add(parent_joint)
+                if parent_link == self._rootLink:
+                    break
+        
+    def active_joints(self) -> set:
         return self._active_joints
         
 
@@ -99,7 +108,7 @@ class URDFparser(object):
         for item in chain:
             if item in self.robot_desc.joint_map:
                 joint = self.robot_desc.joint_map[item]
-                if joint.name in self._active_joints:
+                if joint.name in self._active_joints or joint.type == 'fixed':
                     joint_list += [joint]
 
         return joint_list

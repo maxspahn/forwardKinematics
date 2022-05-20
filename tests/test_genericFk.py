@@ -12,22 +12,38 @@ def panda_fk():
 
 def test_creation():
     absolute_path = os.path.dirname(os.path.abspath(__file__))
-    with open(absolute_path + "/albert.urdf", "r") as file:
+    with open(absolute_path + "/albert_prismatic_fingers.urdf", "r") as file:
         urdf = file.read()
-    fk = GenericURDFFk(urdf, rootLink='panda_link0', end_link='panda_ee')
+    fk = GenericURDFFk(urdf, rootLink='panda_link0', end_link='panda_vacuum')
     assert fk.n() == 7
 
 
 @pytest.fixture
-def generic_fk():
+def generic_fk_clean():
     absolute_path = os.path.dirname(os.path.abspath(__file__))
     with open(absolute_path + "/albert.urdf", "r") as file:
         urdf = file.read()
     fk = GenericURDFFk(urdf, rootLink='panda_link0', end_link='panda_ee')
     return fk
 
+@pytest.fixture
+def generic_fk_fixed_fingers():
+    absolute_path = os.path.dirname(os.path.abspath(__file__))
+    with open(absolute_path + "/albert_fixed_fingers.urdf", "r") as file:
+        urdf = file.read()
+    fk = GenericURDFFk(urdf, rootLink='panda_link0', end_link='panda_vacuum')
+    return fk
 
-def test_simple(generic_fk):
+@pytest.fixture
+def generic_fk_prismatic_fingers():
+    absolute_path = os.path.dirname(os.path.abspath(__file__))
+    with open(absolute_path + "/albert_prismatic_fingers.urdf", "r") as file:
+        urdf = file.read()
+    fk = GenericURDFFk(urdf, rootLink='panda_link0', end_link='panda_vacuum')
+    return fk
+
+def test_clean(generic_fk_clean):
+    generic_fk = generic_fk_clean
     n = generic_fk.n()
     assert n == 7
     q_ca = ca.SX.sym('q', n)
@@ -40,8 +56,40 @@ def test_simple(generic_fk):
     )
     assert isinstance(fk_panda_link, ca.SX)
     assert isinstance(fk_panda_link_np, np.ndarray)
+ 
+def test_fixed_fingers(generic_fk_fixed_fingers):
+    generic_fk = generic_fk_fixed_fingers
+    n = generic_fk.n()
+    assert n == 7
+    q_ca = ca.SX.sym('q', n)
+    q_np = np.zeros(n)
+    fk_panda_link = generic_fk.fk(
+        q_ca, "panda_link7", "panda_vacuum", positionOnly=True
+    )
+    fk_panda_link_np = generic_fk.fk(
+        q_np, "panda_link0", "panda_vacuum", positionOnly=True
+    )
+    assert isinstance(fk_panda_link, ca.SX)
+    assert isinstance(fk_panda_link_np, np.ndarray)
 
-def test_compare(generic_fk, panda_fk):
+
+def test_prismatic_fingers(generic_fk_prismatic_fingers):
+    generic_fk = generic_fk_prismatic_fingers
+    n = generic_fk.n()
+    assert n == 7
+    q_ca = ca.SX.sym('q', n)
+    q_np = np.zeros(n)
+    fk_panda_link = generic_fk.fk(
+        q_ca, "panda_link7", "panda_vacuum", positionOnly=True
+    )
+    fk_panda_link_np = generic_fk.fk(
+        q_np, "panda_link0", "panda_vacuum", positionOnly=True
+    )
+    assert isinstance(fk_panda_link, ca.SX)
+    assert isinstance(fk_panda_link_np, np.ndarray)
+
+def test_compare(generic_fk_prismatic_fingers, panda_fk):
+    generic_fk = generic_fk_prismatic_fingers
     assert generic_fk.n() == panda_fk.n()
     # casadi comparison
     q_ca = ca.SX.sym('q', panda_fk.n())

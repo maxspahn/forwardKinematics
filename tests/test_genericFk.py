@@ -42,6 +42,28 @@ def generic_fk_prismatic_fingers():
     fk = GenericURDFFk(urdf, rootLink='panda_link0', end_link='panda_vacuum')
     return fk
 
+def test_zeros(generic_fk_clean):
+    generic_fk = generic_fk_clean
+    n = generic_fk.n()
+    assert n == 7
+    q_ca = ca.SX.sym('q', n)
+    q_np = np.zeros(n)
+    fk_panda_link = generic_fk.fk(
+        q_ca, "panda_link0", "panda_link0", positionOnly=True
+    )
+    fk_panda_link_np = generic_fk.fk(
+        q_np, "panda_link0", "panda_link0", positionOnly=True
+    )
+    assert isinstance(fk_panda_link, ca.SX)
+    assert isinstance(fk_panda_link_np, np.ndarray)
+    print(fk_panda_link)
+    assert fk_panda_link[0] == ca.SX(0.0)
+    assert fk_panda_link[1] == ca.SX(0.0)
+    assert fk_panda_link[2] == ca.SX(0.0)
+    assert fk_panda_link_np[0] == pytest.approx(0.0)
+    assert fk_panda_link_np[1] == pytest.approx(0.0)
+    assert fk_panda_link_np[2] == pytest.approx(0.0)
+
 def test_clean(generic_fk_clean):
     generic_fk = generic_fk_clean
     n = generic_fk.n()

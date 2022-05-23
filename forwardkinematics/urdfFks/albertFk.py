@@ -9,4 +9,4 @@ class AlbertFk(URDFForwardKinematics):
         relevantLinks = ["world", "base_tip_link", "top_mount"] + [
             "panda_link" + str(i) for i in [0, 3, 4, 5, 6, 7, 8, 9]
         ]
-        super().__init__(fileName, relevantLinks, "world", len(relevantLinks) - 1)
+        super().__init__(fileName, relevantLinks, "world", "panda_link9", len(relevantLinks) - 1)

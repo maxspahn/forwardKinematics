@@ -6,9 +6,9 @@ from forwardkinematics.urdfFks.generic_urdf_fk import GenericURDFFk
 def main():
     with open("albert.urdf", "r") as file:
         urdf = file.read()
-    fk = GenericURDFFk(urdf)
+    fk = GenericURDFFk(urdf, rootLink='panda_link3')
     n = fk.n()
-    q_ca = ca.SX.sym("q", n)
+    q_ca = ca.SX.sym('q', n)
     q_np = np.zeros(n)
     fk_panda_link = fk.fk(
         q_ca, "panda_link7", "panda_ee", positionOnly=True

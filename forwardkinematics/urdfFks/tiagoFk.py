@@ -15,4 +15,4 @@ class TiagoFk(URDFForwardKinematics):
             "gripper_right_grasping_frame"
         ]
         relevantLinks += ["head_1_link", "head_2_link"]
-        super().__init__(fileName, relevantLinks, "world", len(relevantLinks) - 1)
+        super().__init__(fileName, relevantLinks, "world", ["gripper_left_grasping_frame", "gripper_right_grasping_frame", "head_2_link"], len(relevantLinks) - 1)

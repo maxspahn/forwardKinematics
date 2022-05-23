@@ -5,17 +5,18 @@ from forwardkinematics.urdfFks.urdfFk import URDFForwardKinematics
 import forwardkinematics.urdfFks.casadiConversion.urdfparser as u2c
 
 class GenericURDFFk(URDFForwardKinematics):
-    def __init__(self, fileName, rootLink='base_link'):
+    def __init__(self, fileName, rootLink='base_link', end_link=None):
         self._urdf_file = fileName
         self._links = []
+        self._end_link = end_link
         self._rootLink = rootLink
-        self.readURDF()
-        self._n = len(self.robot.get_all_actuated_joints())
+        self.readURDF(rootLink, end_link)
+        self._n = self.robot.degrees_of_freedom()
         self._q_ca = ca.SX.sym("q", self._n)
         self.generateFunctions()
 
-    def readURDF(self):
-        self.robot = u2c.URDFparser()
+    def readURDF(self, rootLink: str, end_link: str):
+        self.robot = u2c.URDFparser(rootLink, end_link)
         self.robot.from_string(self._urdf_file)
         self.robot.detect_link_names()
         self.robot.set_joint_variable_map()

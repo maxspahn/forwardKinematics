@@ -104,11 +104,13 @@ class URDFparser(object):
             raise ValueError('Robot description not loaded from urdf')
 
         joint_list = []
+
         for item in chain:
             if item in self.robot_desc.joint_map:
                 joint = self.robot_desc.joint_map[item]
                 if joint.name in self._active_joints:
                     joint_list += [joint]
+
         return joint_list
 
     def link_names(self):

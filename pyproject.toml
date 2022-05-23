@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "forwardkinematics"
-version = "0.7.1"
+version = "1.0.0"
 description = "\"Light-weight implementation of forward kinematics using casadi.\""
 authors = ["Max Spahn <m.spahn@tudelft.nl>"]
 license = "MIT"
@@ -14,12 +14,8 @@ python = "^3.6.2,<3.11"
 casadi = "3.5.6.pre2"
 numpy = "^1.15.5"
 urdf_parser_py = ">=0.0.3"
-urdfenvs = {git = "https://git@github.com/maxspahn/gym_envs_urdf.git", rev = "master"}
-motion-planning-scenes = {git = "https://git@github.com/maxspahn/motion_planning_scenes.git", rev = "main", optional = true}
-
 
 [tool.poetry.extras]
-env = ["urdfenvs", "motion-planning-scenes"]
 
 [tool.poetry.dev-dependencies]
 jedi = "^0.18.1"

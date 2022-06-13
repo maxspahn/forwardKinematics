@@ -11,7 +11,7 @@ repository = "https://github.com/maxspahn/forwardKinematics.git"
 
 [tool.poetry.dependencies]
 python = "^3.6.2,<3.11"
-casadi = "3.5.6.pre2"
+casadi = "<=3.5.5"
 numpy = "^1.15.5"
 urdf_parser_py = ">=0.0.3"
 

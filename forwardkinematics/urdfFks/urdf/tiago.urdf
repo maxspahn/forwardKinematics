@@ -2,12 +2,18 @@
 <robot name="tiago_dual">
   <!-- Only for forward kinematics -->
   <link name="world"/>
+  <joint name="boxer_joint_world" type="fixed">
+    <parent link="world"/>
+    <child link="origin"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+  </joint>
+  <link name="origin"/>
   <link name="world_base_link_x"/>
   <link name="world_base_link_y"/>
   <link name="base_link_ori"/>
   <joint name="world_base_x" type="prismatic">
     <origin rpy="0 0 0" xyz="0 0 0"/>
-    <parent link="world"/>
+    <parent link="origin"/>
     <child link="world_base_link_x"/>
     <axis xyz="1 0 0"/>
     <limit effort="100" lower="-15" upper="15" velocity="5"/>

@@ -73,3 +73,11 @@ def test_fkNonZeros_rotation(fk):
     assert fkNumpy_rot[1,1] == pytest.approx(np.cos(q_np[2]), abs=1e-4)
     assert fkNumpy_rot[0,1] == pytest.approx(-np.sin(q_np[2]), abs=1e-4)
     assert fkNumpy_rot[1,0] == pytest.approx(np.sin(q_np[2]), abs=1e-4)
+
+def test_error_raise(fk):
+    q_np = np.array([0.5, 0.3, 0.3])
+    fkNumpy = fk.fk(q_np, "panda_link3", positionOnly=True)
+    assert fkNumpy[0] == 0
+    assert fkNumpy[1] == 0
+    assert fkNumpy[2] == 0
+

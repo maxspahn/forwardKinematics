@@ -3,8 +3,6 @@ import casadi as ca
 from forwardkinematics.urdfFks.urdfFk import URDFForwardKinematics, LinkNotInURDFError
 import forwardkinematics.urdfFks.casadiConversion.urdfparser as u2c
 
-from
-
 class GenericURDFFk(URDFForwardKinematics):
     def __init__(self, fileName, rootLink='base_link', end_link=None):
         self._urdf_file = fileName

@@ -1,6 +1,7 @@
 import casadi as ca
 import numpy as np
 from forwardkinematics.urdfFks.pointRobotUrdfFk import PointRobotUrdfFk
+from forwardkinematics.urdfFks.urdfFk import LinkNotInURDFError
 import pytest
 
 
@@ -76,8 +77,5 @@ def test_fkNonZeros_rotation(fk):
 
 def test_error_raise(fk):
     q_np = np.array([0.5, 0.3, 0.3])
-    fkNumpy = fk.fk(q_np, "panda_link3", positionOnly=True)
-    assert fkNumpy[0] == 0
-    assert fkNumpy[1] == 0
-    assert fkNumpy[2] == 0
-
+    with pytest.raises(LinkNotInURDFError):
+        fkNumpy = fk.fk(q_np, "panda_link3", positionOnly=True)

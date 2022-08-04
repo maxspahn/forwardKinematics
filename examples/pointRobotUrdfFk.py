@@ -7,7 +7,7 @@ def main():
     n = 3
     q_ca = ca.SX.sym("q", n)
     fk_point_robot = PointRobotUrdfFk()
-    q_np = np.random.random(n) * 0 * 0
+    q_np = np.random.random(n)
     fkCasadi = fk_point_robot.fk(q_ca, 1, positionOnly=True)
     fkNumpy = fk_point_robot.fk(q_np, 3, positionOnly=True)
     print(fkNumpy)

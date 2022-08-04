@@ -1,11 +1,13 @@
-from abc import abstractmethod, ABC
 import os
-import cmd
 import numpy as np
 import casadi as ca
 import forwardkinematics.urdfFks.casadiConversion.urdfparser as u2c
 
 from forwardkinematics.fksCommon.fk import ForwardKinematics
+
+
+class LinkNotInURDFError(Exception):
+    pass
 
 
 class URDFForwardKinematics(ForwardKinematics):
@@ -31,10 +33,12 @@ class URDFForwardKinematics(ForwardKinematics):
     def generateFunctions(self):
         self._fks = {}
         for link in self.robot.link_names():
-            ca_fun = ca.Function("fk"+link, [self._q_ca], [self.casadi_by_name(self._q_ca, link)])
+            ca_fun = ca.Function(
+                "fk" + link, [self._q_ca], [self.casadi_by_name(self._q_ca, link)]
+            )
             self._fks[link] = ca_fun
 
-    def fk(self, q, link: str, positionOnly: bool=False):
+    def fk(self, q, link: str, positionOnly: bool = False):
         if isinstance(link, str):
             return self.fk_by_name(q, link, positionOnly=positionOnly)
         else:
@@ -50,14 +54,15 @@ class URDFForwardKinematics(ForwardKinematics):
         return self.casadi_by_name(q, self._links[i], positionOnly=positionOnly)
 
     def casadi_by_name(self, q: ca.SX, link: str, positionOnly=False):
+        """
+        Raises:
+            LinkNotInURDFError: An error occured accessing the urdf link.
+        """
         if link not in self.robot.link_names():
-            print(f"The link you have requested, {link}, is not in the urdf.")
-            cli = cmd.Cmd()
-            print("Possible links are")
-            print("----")
-            cli.columnize(self.robot.link_names(), displaywidth=10)
-            print("----")
-            return
+            raise LinkNotInURDFError(
+                f"""The link you have requested, {link}, is not in the urdf.
+                    Possible links are  {self.robot.link_names()}"""
+            )
         if positionOnly:
             return self.robot.get_forward_kinematics(self._rootLink, link, q)["T_fk"][
                 0:3, 3
@@ -69,17 +74,15 @@ class URDFForwardKinematics(ForwardKinematics):
         return self.numpy_by_name(q, self._links[i], positionOnly=positionOnly)
 
     def numpy_by_name(self, q: np.ndarray, link: str, positionOnly=False):
+        """
+        Raises:
+            LinkNotInURDFError: An error occured accessing the urdf link.
+        """
         if link not in self.robot.link_names():
-            print(f"The link you have requested, {link}, is not in the urdf.")
-            cli = cmd.Cmd()
-            print("Possible links are")
-            print("----")
-            cli.columnize(self.robot.link_names(), displaywidth=10)
-            print("----")
-            if positionOnly:
-                return np.zeros(3)
-            else:
-                return np.identity(4)
+            raise LinkNotInURDFError(
+                f"""The link you have requested, {link}, is not in the urdf.
+                    Possible links are  {self.robot.link_names()}"""
+            )
         if positionOnly:
             return np.array(self._fks[link](q))[0:3, 3]
         else:

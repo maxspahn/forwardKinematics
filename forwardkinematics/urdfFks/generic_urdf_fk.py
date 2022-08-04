@@ -1,8 +1,9 @@
 import numpy as np
 import casadi as ca
-import cmd
-from forwardkinematics.urdfFks.urdfFk import URDFForwardKinematics
+from forwardkinematics.urdfFks.urdfFk import URDFForwardKinematics, LinkNotInURDFError
 import forwardkinematics.urdfFks.casadiConversion.urdfparser as u2c
+
+from
 
 class GenericURDFFk(URDFForwardKinematics):
     def __init__(self, fileName, rootLink='base_link', end_link=None):
@@ -23,14 +24,16 @@ class GenericURDFFk(URDFForwardKinematics):
 
 
     def casadi(self, q: ca.SX, parent_link: str, child_link: str, positionOnly=False):
+        if parent_link not in self.robot.link_names():
+            raise LinkNotInURDFError(
+                f"""The link you have requested, {parent_link}, is not in the urdf.
+                    Possible links are  {self.robot.link_names()}"""
+            )
         if child_link not in self.robot.link_names():
-            print(f"The link you have requested, {child_link}, is not in the urdf.")
-            cli = cmd.Cmd()
-            print("Possible links are")
-            print("----")
-            cli.columnize(self.robot.link_names(), displaywidth=10)
-            print("----")
-            return
+            raise LinkNotInURDFError(
+                f"""The link you have requested, {child_link}, is not in the urdf.
+                    Possible links are  {self.robot.link_names()}"""
+            )
         if positionOnly:
             return self.robot.get_forward_kinematics(parent_link, child_link, q)["T_fk"][
                 0:3, 3

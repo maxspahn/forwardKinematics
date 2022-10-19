@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="jackal">
+  <link name="world"/>
+  <joint name="jackal_joint_world" type="fixed">
+    <parent link="world"/>
+    <child link="origin"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+  </joint>
+  <link name="origin"/>
+  <link name="world_base_link_x"/>
+  <link name="world_base_link_y"/>
+  <link name="base_link_ori"/>
+  <joint name="world_base_x" type="prismatic">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="origin"/>
+    <child link="world_base_link_x"/>
+    <axis xyz="1 0 0"/>
+    <limit effort="100" lower="-15" upper="15" velocity="5"/>
+  </joint>
+  <joint name="world_base_y" type="prismatic">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="world_base_link_x"/>
+    <child link="world_base_link_y"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="100" lower="-15" upper="15" velocity="5"/>
+  </joint>
+  <joint name="world_base_theta" type="revolute">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="world_base_link_y"/>
+    <child link="base_link_ori"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100" lower="-15" upper="15" velocity="5"/>
+  </joint>
+  <joint name="base_add_orientation" type="fixed">
+    <origin rpy="0 0 0" xyz="0.0 0 0"/>
+    <parent link="base_link_ori"/>
+    <child link="base_link"/>
+  </joint>
+  <link name="base_link"/>
+  <joint name="base_link_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="chassis_link"/>
+  </joint>
+  <link name="chassis_link"/>
+  <link name="ee_link"/>
+  <joint name="ee_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.2 0 0"/>
+    <parent link="base_link"/>
+    <child link="ee_link"/>
+  </joint>
+</robot>
+

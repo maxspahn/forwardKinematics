@@ -9,6 +9,9 @@ class FkCreator(object):
         elif robotType == 'boxer':
             from forwardkinematics.urdfFks.boxerFk import BoxerFk
             self._fk = BoxerFk()
+        elif robotType == 'jackal':
+            from forwardkinematics.urdfFks.jackalFk import JackalFk
+            self._fk = JackalFk()
         elif robotType == 'albert':
             from forwardkinematics.urdfFks.albertFk import AlbertFk
             self._fk = AlbertFk()

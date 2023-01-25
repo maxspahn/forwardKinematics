@@ -14,8 +14,10 @@ def test_planarFk():
     assert fkNumpy[2] == 1.0
     fkCasadi_fun = ca.Function('test_fun', [q_ca], [fkCasadi])
     test_eval = np.array(fkCasadi_fun(q_np))[:,0]
-    assert test_eval[0] == np.cos(1.0) * 1.0 + np.cos(1.0) * 1.0
-    assert test_eval[1] == np.sin(1.0) * 1.0 + np.sin(1.0) * 1.0
+    test_result = np.cos(1.0) + np.cos(1.0)
+    assert test_eval[0] == test_result
+    test_result = np.sin(1.0) + np.sin(1.0)
+    assert test_eval[1] == test_result
     assert test_eval[2] == 1.0
 
 def test_planarFk_by_name():
@@ -29,6 +31,8 @@ def test_planarFk_by_name():
     assert fkNumpy[2] == 1.0
     fkCasadi_fun = ca.Function('test_fun', [q_ca], [fkCasadi])
     test_eval = np.array(fkCasadi_fun(q_np))[:,0]
-    assert test_eval[0] == np.cos(1.0) * 1.0 + np.cos(1.0) * 1.0
-    assert test_eval[1] == np.sin(1.0) * 1.0 + np.sin(1.0) * 1.0
+    test_result = np.cos(1.0) + np.cos(1.0)
+    assert test_eval[0] == test_result
+    test_result = np.sin(1.0) + np.sin(1.0)
+    assert test_eval[1] == test_result
     assert test_eval[2] == 1.0

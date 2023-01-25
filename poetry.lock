@@ -15,10 +15,7 @@ files = [
 [package.dependencies]
 lazy-object-proxy = ">=1.4.0"
 typing-extensions = {version = ">=4.0.0", markers = "python_version < \"3.11\""}
-wrapt = [
-    {version = ">=1.11,<2", markers = "python_version < \"3.11\""},
-    {version = ">=1.14,<2", markers = "python_version >= \"3.11\""},
-]
+wrapt = {version = ">=1.11,<2", markers = "python_version < \"3.11\""}
 
 [[package]]
 name = "atomicwrites"
@@ -593,10 +590,7 @@ files = [
 [package.dependencies]
 astroid = ">=2.12.13,<=2.14.0-dev0"
 colorama = {version = ">=0.4.5", markers = "sys_platform == \"win32\""}
-dill = [
-    {version = ">=0.2", markers = "python_version < \"3.11\""},
-    {version = ">=0.3.6", markers = "python_version >= \"3.11\""},
-]
+dill = {version = ">=0.2", markers = "python_version < \"3.11\""}
 isort = ">=4.2.5,<6"
 mccabe = ">=0.6,<0.8"
 platformdirs = ">=2.2.0"
@@ -871,5 +865,5 @@ files = [
 
 [metadata]
 lock-version = "2.0"
-python-versions = "^3.8"
-content-hash = "96ab982e83324f792f5a78ec328310b1536ad84852c15790e12372f8fe63400c"
+python-versions = "^3.8,<3.10"
+content-hash = "527b9c6d99055a4d4e164a8dc32547fe83ad45451a22d25e3a2258fe1f85347a"

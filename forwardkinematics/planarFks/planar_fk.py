@@ -1,6 +1,3 @@
-from abc import abstractmethod, ABC
-import numpy as np
-import casadi as ca
 import re
 
 from forwardkinematics.fksCommon.fk import ForwardKinematics
@@ -20,6 +17,6 @@ class ForwardKinematicsPlanar(ForwardKinematics):
         regex_match = re.match(r'\D*(\d*)', link)
         try:
             return int(regex_match.group(1))
-        except Exception as e:
+        except Exception as _:
             raise NoLinkIndexFoundInLinkNameError(f"Link name {link} could not be resolved")
 

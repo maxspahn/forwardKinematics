@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "forwardkinematics"
-version = "1.0.8"
+version = "1.1.0"
 description = "\"Light-weight implementation of forward kinematics using casadi.\""
 authors = ["Max Spahn <m.spahn@tudelft.nl>"]
 license = "MIT"
@@ -10,7 +10,7 @@ repository = "https://github.com/maxspahn/forwardKinematics.git"
 
 
 [tool.poetry.dependencies]
-python = "^3.6.2,<3.10"
+python = "^3.8"
 casadi = "^3.5.4,!=3.5.5.post1,!=3.5.5.post2"
 numpy = "^1.15.3"
 urdf_parser_py = ">=0.0.3"

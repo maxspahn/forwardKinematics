@@ -35,7 +35,7 @@ jobs:
           git config user.name "${{ env.CI_COMMIT_AUTHOR }}"
           git config user.email "noreply@github.com"
       - name: Set version variable
-        run: echo "VERSION=$(poetry versios -s)" >> $GITHUB_ENV
+        run: echo "VERSION=$(poetry version -s)" >> $GITHUB_ENV
       - name: Create release branch
         run: git checkout -b release/v$VERSION
       - name: Generate a changelog
@@ -57,8 +57,8 @@ jobs:
         env: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: $VERSION
-          release_name: Release $VERSION
+          tag_name: "$VERSION"
+          release_name: Release "$VERSION"
           body_path: CHANGELOG.md
           draft: false
           prerelease: false

@@ -70,7 +70,7 @@ class URDFparser(object):
 
     def is_active_joint(self, joint):
         parent_link = joint.parent
-        while not (parent_link == self._rootLink or parent_link == self._absolute_root_link):
+        while parent_link not in [self._rootLink, self._absolute_root_link]:
             if parent_link in self._end_links:
                 return False
             parent_joint, parent_link = self.robot_desc.parent_map[parent_link]
@@ -83,7 +83,7 @@ class URDFparser(object):
 
     def set_active_joints(self) -> None:
         for parent_link in self._end_links:
-            while not (parent_link == self._rootLink or parent_link == self._absolute_root_link):
+            while parent_link not in [self._rootLink, self._absolute_root_link]:
                 parent_joint, parent_link = self.robot_desc.parent_map[parent_link]
                 self._active_joints.add(parent_joint)
                 if parent_link == self._rootLink:

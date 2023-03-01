@@ -1,4 +1,5 @@
 __pycache__
+.python-version
 forwardkinematics.egg-info/
 dist
 *.swp

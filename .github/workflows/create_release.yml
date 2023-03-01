@@ -59,7 +59,7 @@ jobs:
         with:
           tag: "${{ env.VERSION }}"
           bodyFile: CHANGELOG.md
-          artifacts: "dist/forwardkinematics-${{  VERSION }}.tar.gz";"dist/forwardkinematics-${{  VERSION  }}-py3-none-any.whl"
+          artifacts: dist/*.tar.gz;dist/*.whl
       - name: Push release branch
         run: git push origin release/v$VERSION
       - name: Update main branch

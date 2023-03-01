@@ -53,13 +53,13 @@ jobs:
       - name: Builds python package
         run: poetry build
       - name: Create a tag
-        run: git tag -a v$VERSION -m "v$VERSION"
+        run: git tag -a v$VERSION -m "v${{ env.VERSION }}"
       - name: Create a release
         uses: ncipollo/release-action@v1
         with:
-          tag: "$VERSION"
+          tag: "${{ env.VERSION }}"
           bodyFile: CHANGELOG.md
-          artifacts: dist/forwardkinematics-$VERSION.tar.gz;dist/forwardkinematics-$VERSION-py3-none-any.whl
+          artifacts: "dist/forwardkinematics-${{  VERSION }}.tar.gz";"dist/forwardkinematics-${{  VERSION  }}-py3-none-any.whl"
       - name: Push release branch
         run: git push origin release/v$VERSION
       - name: Update main branch

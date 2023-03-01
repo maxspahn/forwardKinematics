@@ -57,7 +57,7 @@ jobs:
       - name: Create a release
         uses: ncipollo/release-action@v1
         with:
-          tag: "${{ env.VERSION }}"
+          tag: "v${{ env.VERSION }}"
           bodyFile: CHANGELOG.md
           artifacts: dist/*.tar.gz;dist/*.whl
       - name: Push release branch

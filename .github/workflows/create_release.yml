@@ -59,9 +59,9 @@ jobs:
         with:
           tag_name: $VERSION
           release_name: Release $VERSION
-        body_path: CHANGELOG.md
-        draft: false
-        prerelease: false
+          body_path: CHANGELOG.md
+          draft: false
+          prerelease: false
       - name: Upload release assets
         uses: AButler/upload-release-assets@v2.0
         with:

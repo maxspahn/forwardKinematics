@@ -62,12 +62,10 @@ jobs:
           artifacts: dist/*.tar.gz;dist/*.whl
       - name: Push release branch
         run: git push origin release/v$VERSION
-      - name: Checkout main branch
-        uses: actions/checkout@v3
-        with:
-          ref: main
       - name: Update main branch
         run: |
+          git fetch origin
+          git checkout -b main origin/main
           git merge release/v$VERSION
           git push origin main
       - name: Publish to pypi

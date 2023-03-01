@@ -55,7 +55,7 @@ jobs:
       - name: Create a tag
         run: git tag -a v$VERSION -m "v$VERSION"
       - name: Create a release
-        uses: actions/release-action@v1
+        uses: ncipollo/release-action@v1
         with:
           tag: "$VERSION"
           bodyFile: CHANGELOG.md

@@ -66,7 +66,7 @@ jobs:
         run: |
           git fetch origin
           git checkout -b main origin/main
-          git merge release/v$VERSION
+          git merge origin/release/v$VERSION
           git push origin main
       - name: Publish to pypi
         uses: JRubics/poetry-publish@v1.13

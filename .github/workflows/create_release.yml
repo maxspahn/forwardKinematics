@@ -67,11 +67,6 @@ jobs:
         with:
           files: dist/forwardkinematics-$VERSION.tar.gz;dist/forwardkinematics-$VERSION-py3-none-any.whl
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Publish to pypi
-        uses: JRubics/poetry-publish@v1.13
-        with:
-          python_version: "3.8"
-          pypi_token: ${{ secrets.PYPI_TOKEN }}
       - name: Push release branch
         run: git push origin release/v$VERSION
       - name: Update main branch
@@ -79,3 +74,8 @@ jobs:
           git checkout main
           git merge release/v$VERSION
           git push origin main
+      - name: Publish to pypi
+        uses: JRubics/poetry-publish@v1.13
+        with:
+          python_version: "3.8"
+          pypi_token: ${{ secrets.PYPI_TOKEN }}

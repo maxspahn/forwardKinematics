@@ -64,7 +64,7 @@ jobs:
         run: git push origin release/v$VERSION
       - name: Update main branch
         run: |
-          git fetch origin
+          git fetch origin --unshallow
           git checkout -b main origin/main
           git merge origin/release/v$VERSION
           git push origin main

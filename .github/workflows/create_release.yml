@@ -52,21 +52,14 @@ jobs:
           git commit -m "${{ env.CI_COMMIT_MESSAGE }}"
       - name: Builds python package
         run: poetry build
+      - name: Create a tag
+        run: git tag -a v$VERSION -m "v$VERSION"
       - name: Create a release
-        uses: actions/create-release@v1
-        env: 
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: actions/release-action@v1
         with:
-          tag_name: "$VERSION"
-          release_name: Release "$VERSION"
-          body_path: CHANGELOG.md
-          draft: false
-          prerelease: false
-      - name: Upload release assets
-        uses: AButler/upload-release-assets@v2.0
-        with:
-          files: dist/forwardkinematics-$VERSION.tar.gz;dist/forwardkinematics-$VERSION-py3-none-any.whl
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          tag: "$VERSION"
+          bodyFile: CHANGELOG.md
+          artifacts: dist/forwardkinematics-$VERSION.tar.gz;dist/forwardkinematics-$VERSION-py3-none-any.whl
       - name: Push release branch
         run: git push origin release/v$VERSION
       - name: Update main branch

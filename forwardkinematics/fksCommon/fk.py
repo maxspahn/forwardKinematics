@@ -11,6 +11,9 @@ class ForwardKinematics(ABC):
         ABC.__init__(self)
         self._n = None
 
+    def set_mount_transformation(self, mount_transformation: np.ndarray):
+        self._mount_transformation = mount_transformation
+
     def fk(self, q, link, positionOnly=False):
         if isinstance(q, ca.SX):
             return self.casadi(q, link, positionOnly=positionOnly)

@@ -15,7 +15,7 @@ class GenericURDFFk(URDFForwardKinematics):
             self._q_base = ca.SX.sym("q_base", 3)
         self._base_type = base_type
         self._q_ca = ca.SX.sym("q", self._n)
-        self.generateFunctions()
+        self._mount_transformation = np.identity(4)
 
     def readURDF(self, rootLink: str, end_link: str):
         self.robot = u2c.URDFparser(rootLink, end_link)
@@ -55,6 +55,7 @@ class GenericURDFFk(URDFForwardKinematics):
             fk = ca.mtimes(T_base, fk)
         else:
             fk = self.robot.get_forward_kinematics(parent_link, child_link, q)["T_fk"]
+            fk = ca.mtimes(self._mount_transformation, fk)
 
         if positionOnly:
             fk = fk[0:3, 3]

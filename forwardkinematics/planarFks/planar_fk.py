@@ -7,6 +7,11 @@ class NoLinkIndexFoundInLinkNameError(Exception):
 
 class ForwardKinematicsPlanar(ForwardKinematics):
 
+    def __init__(self):
+        super().__init__()
+        self._mount_transformation = np.identity(3)
+
+
     def fk(self, q, link: str, positionOnly: bool=False):
         if isinstance(link, str):
             return super().fk(q, self.get_link_index(link), positionOnly=positionOnly)

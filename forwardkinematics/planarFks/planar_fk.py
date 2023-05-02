@@ -1,4 +1,5 @@
 import re
+import numpy as np
 
 from forwardkinematics.fksCommon.fk import ForwardKinematics
 

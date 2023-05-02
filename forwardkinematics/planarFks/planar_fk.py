@@ -1,4 +1,5 @@
 import re
+import numpy as np
 
 from forwardkinematics.fksCommon.fk import ForwardKinematics
 
@@ -6,6 +7,11 @@ class NoLinkIndexFoundInLinkNameError(Exception):
     pass
 
 class ForwardKinematicsPlanar(ForwardKinematics):
+
+    def __init__(self):
+        super().__init__()
+        self._mount_transformation = np.identity(3)
+
 
     def fk(self, q, link: str, positionOnly: bool=False):
         if isinstance(link, str):

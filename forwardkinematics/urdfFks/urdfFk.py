@@ -20,9 +20,9 @@ class URDFForwardKinematics(ForwardKinematics):
         self._rootLink = rootLink
         self._end_links = end_links
         self._q_ca = ca.SX.sym("q", n)
+        self._mount_transformation = np.identity(4)
         self.readURDF()
         self._n = n
-        self.generateFunctions()
 
     def readURDF(self):
         self.robot = u2c.URDFparser(rootLink=self._rootLink, end_links=self._end_links)
@@ -63,17 +63,18 @@ class URDFForwardKinematics(ForwardKinematics):
                 f"""The link you have requested, {link}, is not in the urdf.
                     Possible links are  {self.robot.link_names()}"""
             )
+        fk = self.robot.get_forward_kinematics(self._rootLink, link, q)["T_fk"]
         if positionOnly:
-            return self.robot.get_forward_kinematics(self._rootLink, link, q)["T_fk"][
-                0:3, 3
-            ]
+            return fk[0:3, 3]
         else:
-            return self.robot.get_forward_kinematics(self._rootLink, link, q)["T_fk"]
+            return fk
 
     def numpy(self, q: ca.SX, i: int, positionOnly=False):
         return self.numpy_by_name(q, self._links[i], positionOnly=positionOnly)
 
     def numpy_by_name(self, q: np.ndarray, link: str, positionOnly=False):
+        if not hasattr(self, '_fks'):
+            self.generateFunctions()
         """
         Raises:
             LinkNotInURDFError: An error occured accessing the urdf link.

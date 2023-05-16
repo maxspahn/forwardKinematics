@@ -36,14 +36,14 @@ class GenericURDFFk(URDFForwardKinematics):
             self._fks[link] = ca_fun
 
 
-    def casadi(self, q: ca.SX, parent_link: str, child_link: str, positionOnly=False):
+    def casadi(self, q: ca.SX, parent_link: str, child_link: str, link_transformation=np.eye(4), positionOnly=False):
         if child_link not in self.robot.link_names():
             raise LinkNotInURDFError(
                 f"""The link you have requested, {child_link}, is not in the urdf.
                     Possible links are  {self.robot.link_names()}"""
             )
         if self._base_type in ['diffdrive']:
-            fk = self.robot.get_forward_kinematics(parent_link, child_link, q[2:])["T_fk"]
+            fk = self.robot.get_forward_kinematics(parent_link, child_link, q[2:], link_transformation)["T_fk"]
             c = ca.cos(q[2])
             s = ca.sin(q[2])
             T_base = ca.vcat([
@@ -54,26 +54,27 @@ class GenericURDFFk(URDFForwardKinematics):
             ])
             fk = ca.mtimes(T_base, fk)
         else:
-            fk = self.robot.get_forward_kinematics(parent_link, child_link, q)["T_fk"]
+            fk = self.robot.get_forward_kinematics(parent_link, child_link, q, link_transformation)["T_fk"]
             fk = ca.mtimes(self._mount_transformation, fk)
 
         if positionOnly:
             fk = fk[0:3, 3]
         return fk
 
-    def fk(self, q: ca.SX, parent_link: str, child_link: str, positionOnly=False):
+    def fk(self, q: ca.SX, parent_link: str, child_link: str,link_transformation=np.eye(4), positionOnly=False):
         if isinstance(q, ca.SX):
-            return self.casadi(q, parent_link, child_link, positionOnly=positionOnly)
+            return self.casadi(q, parent_link, child_link, link_transformation, positionOnly=positionOnly)
         elif isinstance(q, np.ndarray):
-            return self.numpy(q, parent_link, child_link, positionOnly=positionOnly)
+            return self.numpy(q, parent_link, child_link, link_transformation, positionOnly=positionOnly)
 
-    def numpy(self, q: ca.SX, parent_link: str, child_link: str, positionOnly=False):
+    def numpy(self, q: ca.SX, parent_link: str, child_link: str, link_transformation=np.eye(4), positionOnly=False):
         if parent_link == self._rootLink:
             fk_parent = np.identity(4)
         else:
             fk_parent = super().numpy_by_name(q, parent_link)
         fk_child = super().numpy_by_name(q, child_link)
         tf_parent_child = np.dot(np.linalg.inv(fk_parent), fk_child)
+        tf_parent_child = np.dot(link_transformation, tf_parent_child) #ToDo check if correct
         if positionOnly:
             return tf_parent_child[0:3, 3]
         else:

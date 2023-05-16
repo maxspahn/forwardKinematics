@@ -3,6 +3,7 @@
 Changes are in get_forward_kinematics as it allows to pass the variable as an argument.
 """
 import casadi as ca
+import numpy as np
 from urdf_parser_py.urdf import URDF
 import forwardkinematics.urdfFks.casadiConversion.geometry.transformation_matrix as T
 

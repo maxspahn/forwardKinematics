@@ -61,7 +61,7 @@ class GenericURDFFk(URDFForwardKinematics):
             fk = fk[0:3, 3]
         return fk
 
-    def fk(self, q: ca.SX, parent_link: str, child_link: str, positionOnly=False):
+    def fk(self, q: ca.SX, parent_link: str, child_link: str,link_transformation, positionOnly=False):
         if isinstance(q, ca.SX):
             return self.casadi(q, parent_link, child_link, link_transformation, positionOnly=positionOnly)
         elif isinstance(q, np.ndarray):

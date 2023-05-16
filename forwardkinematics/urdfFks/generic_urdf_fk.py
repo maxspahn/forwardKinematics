@@ -36,7 +36,7 @@ class GenericURDFFk(URDFForwardKinematics):
             self._fks[link] = ca_fun
 
 
-    def casadi(self, q: ca.SX, parent_link: str, child_link: str, link_transformation, positionOnly=False):
+    def casadi(self, q: ca.SX, parent_link: str, child_link: str, link_transformation=np.eye(4), positionOnly=False):
         if child_link not in self.robot.link_names():
             raise LinkNotInURDFError(
                 f"""The link you have requested, {child_link}, is not in the urdf.
@@ -67,7 +67,7 @@ class GenericURDFFk(URDFForwardKinematics):
         elif isinstance(q, np.ndarray):
             return self.numpy(q, parent_link, child_link, link_transformation, positionOnly=positionOnly)
 
-    def numpy(self, q: ca.SX, parent_link: str, child_link: str, link_transformation, positionOnly=False):
+    def numpy(self, q: ca.SX, parent_link: str, child_link: str, link_transformation=np.eye(4), positionOnly=False):
         if parent_link == self._rootLink:
             fk_parent = np.identity(4)
         else:

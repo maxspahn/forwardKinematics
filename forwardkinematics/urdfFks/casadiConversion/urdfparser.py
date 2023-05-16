@@ -122,7 +122,7 @@ class URDFparser(object):
                 print(f"Link with name {link.name} does not has a parent. Link name is skipped.")
         return self._link_names
 
-    def get_forward_kinematics(self, root, tip, q, link_transformation):
+    def get_forward_kinematics(self, root, tip, q, link_transformation=np.eye(4)):
         """Returns the forward kinematics as a casadi function."""
         if self.robot_desc is None:
             raise ValueError('Robot description not loaded from urdf')

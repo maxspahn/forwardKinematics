@@ -46,15 +46,15 @@ def fk():
 def test_dualArmFk(fk):
     q_ca = ca.SX.sym("q", fk.n())
     q_np = np.random.random(fk.n())
-    fkCasadi = fk.fk(q_ca, fk.n(), positionOnly=False)
-    fkNumpy = fk.fk(q_np, fk.n(), positionOnly=False)
+    fkCasadi = fk.fk(q_ca, fk.n(), position_only=False)
+    fkNumpy = fk.fk(q_np, fk.n(), position_only=False)
     assert isinstance(fkCasadi, ca.SX)
     assert isinstance(fkNumpy, np.ndarray)
 
 def test_different_endeffectors(fk):
     q_ca = ca.SX.sym("q", fk.n())
-    fkCasadi_ee1 = fk.fk(q_ca, 3, positionOnly=True)
-    fkCasadi_ee2 = fk.fk(q_ca, 5, positionOnly=True)
+    fkCasadi_ee1 = fk.fk(q_ca, 3, position_only=True)
+    fkCasadi_ee2 = fk.fk(q_ca, 5, position_only=True)
     assert isinstance(fkCasadi_ee1, ca.SX)
     assert isinstance(fkCasadi_ee2, ca.SX)
     variables_ee1 = get_variables_from_casadi_expression("q", fkCasadi_ee1, fk.n())

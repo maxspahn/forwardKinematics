@@ -1,4 +1,5 @@
 import numpy as np
+from typing import Union
 import casadi as ca
 from forwardkinematics.urdfFks.urdfFk import URDFForwardKinematics, LinkNotInURDFError
 import forwardkinematics.urdfFks.casadiConversion.urdfparser as u2c
@@ -31,12 +32,14 @@ class GenericURDFFk(URDFForwardKinematics):
             else:
                 q = self._q_ca
             ca_fun = ca.Function(
-                "fk" + link, [q], [self.casadi(q, self._rootLink, link)]
+                "fk" + link, [q], [self.casadi(q, link)]
             )
             self._fks[link] = ca_fun
 
 
-    def casadi(self, q: ca.SX, parent_link: str, child_link: str, link_transformation=np.eye(4), positionOnly=False):
+    def casadi(self, q: ca.SX, child_link: str, parent_link: Union[str, None] = None, link_transformation=np.eye(4), position_only=False):
+        if parent_link is None:
+            parent_link = self._rootLink
         if child_link not in self.robot.link_names():
             raise LinkNotInURDFError(
                 f"""The link you have requested, {child_link}, is not in the urdf.
@@ -57,17 +60,13 @@ class GenericURDFFk(URDFForwardKinematics):
             fk = self.robot.get_forward_kinematics(parent_link, child_link, q, link_transformation)["T_fk"]
             fk = ca.mtimes(self._mount_transformation, fk)
 
-        if positionOnly:
+        if position_only:
             fk = fk[0:3, 3]
         return fk
 
-    def fk(self, q: ca.SX, parent_link: str, child_link: str,link_transformation=np.eye(4), positionOnly=False):
-        if isinstance(q, ca.SX):
-            return self.casadi(q, parent_link, child_link, link_transformation, positionOnly=positionOnly)
-        elif isinstance(q, np.ndarray):
-            return self.numpy(q, parent_link, child_link, link_transformation, positionOnly=positionOnly)
-
-    def numpy(self, q: ca.SX, parent_link: str, child_link: str, link_transformation=np.eye(4), positionOnly=False):
+    def numpy(self, q: ca.SX, child_link: str, parent_link: Union[str, None] = None, link_transformation=np.eye(4), position_only=False):
+        if parent_link is None:
+            parent_link = self._rootLink
         if parent_link == self._rootLink:
             fk_parent = np.identity(4)
         else:
@@ -75,7 +74,7 @@ class GenericURDFFk(URDFForwardKinematics):
         fk_child = super().numpy_by_name(q, child_link)
         tf_parent_child = np.dot(np.linalg.inv(fk_parent), fk_child)
         tf_parent_child = np.dot(link_transformation, tf_parent_child) #ToDo check if correct
-        if positionOnly:
+        if position_only:
             return tf_parent_child[0:3, 3]
         else:
             return tf_parent_child

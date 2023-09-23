@@ -27,5 +27,5 @@ def test_fkCreator():
             fk_creator = FkCreator(robotType)
         fk = fk_creator.fk()
         q_np = np.random.random(fk.n())
-        fkNumpy = fk.fk(q_np, fk.n(), positionOnly=False)
+        fkNumpy = fk.fk(q_np, fk.n(), position_only=False)
         assert isinstance(fkNumpy, np.ndarray)

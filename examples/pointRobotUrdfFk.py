@@ -1,15 +1,21 @@
 import casadi as ca
 import numpy as np
-from forwardkinematics.urdfFks.pointRobotUrdfFk import PointRobotUrdfFk
+from forwardkinematics import GenericURDFFk
 
 
 def main():
-    n = 3
-    q_ca = ca.SX.sym("q", n)
-    fk_point_robot = PointRobotUrdfFk()
+    with open("pointRobot.urdf", "r") as file:
+        urdf = file.read()
+    fk_point_robot = GenericURDFFk(
+        urdf,
+        rootLink = 'origin',
+        end_link="base_link",
+    )
+    n = fk_point_robot.n()
     q_np = np.random.random(n)
-    fkCasadi = fk_point_robot.fk(q_ca, 1, positionOnly=True)
-    fkNumpy = fk_point_robot.fk(q_np, 3, positionOnly=True)
+    q_ca = ca.SX.sym("q", n)
+    fkCasadi = fk_point_robot.casadi(q_ca, 'base_link', position_only=True)
+    fkNumpy = fk_point_robot.numpy(q_np, 'base_link', position_only=True)
     print(fkNumpy)
     print(fkCasadi)
 

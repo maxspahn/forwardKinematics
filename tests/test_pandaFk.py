@@ -1,3 +1,4 @@
+import os
 import casadi as ca
 import numpy as np
 import pytest
@@ -7,7 +8,8 @@ from forwardkinematics.urdfFks.urdfFk import LinkNotInURDFError
 
 @pytest.fixture
 def fk() -> GenericURDFFk:
-    with open("panda.urdf", "r") as file:
+    urdf_file = os.path.dirname(os.path.abspath(__file__)) + "/panda.urdf"
+    with open(urdf_file, "r") as file:
         urdf = file.read()
     fk_panda = GenericURDFFk(
         urdf,

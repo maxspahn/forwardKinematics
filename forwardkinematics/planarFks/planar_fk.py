@@ -13,11 +13,11 @@ class ForwardKinematicsPlanar(ForwardKinematics):
         self._mount_transformation = np.identity(3)
 
 
-    def fk(self, q, link: str, positionOnly: bool=False):
+    def fk(self, q, link: str, position_only: bool=False):
         if isinstance(link, str):
-            return super().fk(q, self.get_link_index(link), positionOnly=positionOnly)
+            return super().fk(q, self.get_link_index(link), position_only=position_only)
         else:
-            return super().fk(q, link, positionOnly=positionOnly)
+            return super().fk(q, link, position_only=position_only)
 
     def get_link_index(self, link: str):
         regex_match = re.match(r'\D*(\d*)', link)

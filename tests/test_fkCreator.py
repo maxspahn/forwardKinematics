@@ -2,17 +2,9 @@ import numpy as np
 from forwardkinematics.fksCommon.fk_creator import FkCreator
 
 robotTypes = [
-    "jackal",
-    "panda",
-    "boxer",
-    "albert",
-    "tiago",
     "planarArm",
-    "mobilePanda",
     "pointRobot",
     "groundRobot",
-    "pointRobotUrdf",
-    "dualArm",
 ]
 
 genericRobotTypes = ["planarArm"]

@@ -9,16 +9,16 @@ class MobileRobotFk(ForwardKinematics):
         self._n = n
         self._baseHeight = baseHeight
 
-    def fk(self, q, i, positionOnly=False, endlink=0.0):
+    def fk(self, q, i, position_only=False, endlink=0.0):
         assert i <= self._n
         if isinstance(q, ca.SX):
             assert q.shape[0] == self._n
-            return self.casadi(q, i, positionOnly=positionOnly, endlink=endlink)
+            return self.casadi(q, i, position_only=position_only, endlink=endlink)
         elif isinstance(q, np.ndarray):
             assert q.size == self._n
-            return self.numpy(q, i, positionOnly=positionOnly, endlink=endlink)
+            return self.numpy(q, i, position_only=position_only, endlink=endlink)
 
-    def casadi(self, q, i, positionOnly=False, endlink=0.0):
+    def casadi(self, q, i, position_only=False, endlink=0.0):
         fk = ca.SX(np.zeros(3))
         if i > 0:
             if self._n > 1:
@@ -32,12 +32,12 @@ class MobileRobotFk(ForwardKinematics):
                 fk[2] += q[i]
         fk[0] += ca.cos(fk[2]) * endlink
         fk[1] += ca.sin(fk[2]) * endlink
-        if positionOnly:
+        if position_only:
             return fk[0:2]
         else:
             return fk
 
-    def numpy(self, q, i, positionOnly=False, endlink=0.0):
+    def numpy(self, q, i, position_only=False, endlink=0.0):
         fk = np.zeros(3)
         if i > 0:
             if self._n > 1:
@@ -51,7 +51,7 @@ class MobileRobotFk(ForwardKinematics):
                 fk[2] += q[i]
         fk[0] += np.cos(fk[2]) * endlink
         fk[1] += np.sin(fk[2]) * endlink
-        if positionOnly:
+        if position_only:
             return fk[0:2]
         else:
             return fk

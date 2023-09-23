@@ -14,10 +14,10 @@ def main():
     q_ca = ca.SX.sym('q', n)
     q_np = np.zeros(n)
     fk_panda_link = fk.fk(
-        q_ca, "panda_link3", "panda_leftfinger", positionOnly=True
+        q_ca, "panda_link3", "panda_leftfinger", position_only=True
     )
     fk_panda_link_np = fk.fk(
-        q_np, "panda_link3", "panda_leftfinger", positionOnly=True
+        q_np, "panda_link3", "panda_leftfinger", position_only=True
     )
     print(f"casadi fk: {fk_panda_link}")
     print(f"numpy fk: {fk_panda_link_np}")

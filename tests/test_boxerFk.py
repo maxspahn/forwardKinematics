@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import pytest
 
@@ -6,7 +7,8 @@ from forwardkinematics import GenericURDFFk
 
 @pytest.fixture
 def fk() -> GenericURDFFk:
-    with open("boxer.urdf", "r") as file:
+    urdf_file = os.path.dirname(os.path.abspath(__file__)) + "/boxer.urdf"
+    with open(urdf_file, "r") as file:
         urdf = file.read()
     fk_boxer = GenericURDFFk(
         urdf,

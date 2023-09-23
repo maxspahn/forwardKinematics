@@ -18,6 +18,11 @@ class GenericURDFFk(URDFForwardKinematics):
         self._q_ca = ca.SX.sym("q", self._n)
         self._mount_transformation = np.identity(4)
 
+    def n(self) -> int:
+        if self._base_type == 'diffdrive':
+            return self._n + 3
+        return self._n
+
     def readURDF(self, rootLink: str, end_link: str):
         self.robot = u2c.URDFparser(rootLink, end_link)
         self.robot.from_string(self._urdf_file)

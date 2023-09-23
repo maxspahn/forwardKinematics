@@ -10,19 +10,19 @@ class ForwardKinematicsByName(ABC):
     def __init__(self):
         ABC.__init__(self)
 
-    def fk(self, q, link: str, positionOnly: bool=False):
+    def fk(self, q, link: str, position_only: bool=False):
         if isinstance(q, ca.SX):
-            return self.casadi(q, link, positionOnly=positionOnly)
+            return self.casadi(q, link, position_only=position_only)
         elif isinstance(q, np.ndarray):
-            return self.numpy(q, link, positionOnly=positionOnly)
+            return self.numpy(q, link, position_only=position_only)
 
     def n(self):
         return self._n
 
     @abstractmethod
-    def casadi(self, q: ca.SX, link: str, positionOnly=False) -> ca.SX:
+    def casadi(self, q: ca.SX, link: str, position_only=False) -> ca.SX:
         pass
 
     @abstractmethod
-    def numpy(self, q: np.ndarray, link: str, positionOnly=False) -> np.ndarray:
+    def numpy(self, q: np.ndarray, link: str, position_only=False) -> np.ndarray:
         pass

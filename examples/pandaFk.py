@@ -13,8 +13,8 @@ def main():
         end_link="panda_leftfinger",
     )
     q_np = np.random.random(7)
-    fk_casadi = fk_panda.casadi_by_name(q_ca, 'panda_rightfinger', positionOnly=False)
-    fk_numpy = fk_panda.numpy_by_name(q_np, 'panda_leftfinger', positionOnly=False)
+    fk_casadi = fk_panda.casadi_by_name(q_ca, 'panda_rightfinger', position_only=False)
+    fk_numpy = fk_panda.numpy_by_name(q_np, 'panda_leftfinger', position_only=False)
     print(fk_numpy)
     print(fk_casadi)
 

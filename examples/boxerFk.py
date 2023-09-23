@@ -15,8 +15,8 @@ def main():
         base_type='diffdrive',
     )
     q_np = np.random.random(n)
-    fk_casadi = fk_generic.fk(q_ca, parent_link='base_link', child_link='ee_link', positionOnly=True)
-    fk_numpy = fk_generic.fk(q_np, parent_link='base_link', child_link='ee_link', positionOnly=True)
+    fk_casadi = fk_generic.fk(q_ca, parent_link='base_link', child_link='ee_link', position_only=True)
+    fk_numpy = fk_generic.fk(q_np, parent_link='base_link', child_link='ee_link', position_only=True)
     print(fk_casadi)
     print(fk_numpy)
 

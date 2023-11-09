@@ -158,7 +158,7 @@ class URDFparser(object):
                     joint.axis, q[self._joint_map[joint.name]])
                 T_fk = ca.mtimes(T_fk, joint_frame)
 
-            T_fk = ca.mtimes(T_fk, link_transformation)
+        T_fk = ca.mtimes(T_fk, link_transformation)
 
         return {
             "T_fk": T_fk

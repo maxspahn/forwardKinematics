@@ -12,8 +12,8 @@ class URDFparser(object):
     """Class that turns a chain from URDF to casadi functions."""
     actuated_types = ["prismatic", "revolute", "continuous"]
     
-    def __init__(self, rootLink: str="base_link", end_links: list = None):
-        self._rootLink = rootLink
+    def __init__(self, root_link: str="base_link", end_links: list = None):
+        self._root_link = root_link
         if isinstance(end_links, str):
             self._end_links = [end_links]
         else:
@@ -71,23 +71,23 @@ class URDFparser(object):
 
     def is_active_joint(self, joint):
         parent_link = joint.parent
-        while parent_link not in [self._rootLink, self._absolute_root_link]:
+        while parent_link not in [self._root_link, self._absolute_root_link]:
             if parent_link in self._end_links:
                 return False
             parent_joint, parent_link = self.robot_desc.parent_map[parent_link]
             if parent_joint in self._active_joints:
                 return True
 
-        if parent_link == self._rootLink:
+        if parent_link == self._root_link:
             return True
         return False
 
     def set_active_joints(self) -> None:
         for parent_link in self._end_links:
-            while parent_link not in [self._rootLink, self._absolute_root_link]:
+            while parent_link not in [self._root_link, self._absolute_root_link]:
                 parent_joint, parent_link = self.robot_desc.parent_map[parent_link]
                 self._active_joints.add(parent_joint)
-                if parent_link == self._rootLink:
+                if parent_link == self._root_link:
                     break
         
     def active_joints(self) -> set:

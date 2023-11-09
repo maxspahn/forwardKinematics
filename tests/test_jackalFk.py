@@ -12,8 +12,8 @@ def fk():
         urdf = file.read()
     fk_jackal = GenericURDFFk(
         urdf,
-        rootLink = 'base_link',
-        end_link="ee_link",
+        root_link = 'base_link',
+        end_links="ee_link",
         base_type='diffdrive',
     )
     return fk_jackal

@@ -13,8 +13,8 @@ def fk():
         urdf = file.read()
     fk_panda = GenericURDFFk(
         urdf,
-        rootLink = 'world',
-        end_link="panda_link9",
+        root_link = 'world',
+        end_links="panda_link9",
     )
     return fk_panda
 

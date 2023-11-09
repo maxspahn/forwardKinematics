@@ -13,8 +13,8 @@ def fk():
         urdf = file.read()
     fk_point_robot = GenericURDFFk(
         urdf,
-        rootLink = 'origin',
-        end_link="base_link",
+        root_link = 'origin',
+        end_links="base_link",
     )
     return fk_point_robot
 
@@ -40,7 +40,7 @@ def test_fkZeros(fk):
 
 def test_fkNonZeros(fk):
     q_np = np.array([0.5, 0.3, 0.3])
-    fkNumpy = fk.fk(q_np, 'origin', position_only=True)
+    fkNumpy = fk.numpy(q_np, 'origin', position_only=True)
     assert fkNumpy[0] == 0
     assert fkNumpy[1] == 0
     assert fkNumpy[2] == 0
@@ -87,4 +87,4 @@ def test_fkNonZeros_rotation(fk):
 def test_error_raise(fk):
     q_np = np.array([0.5, 0.3, 0.3])
     with pytest.raises(LinkNotInURDFError):
-        fkNumpy = fk.fk(q_np, "panda_link3", position_only=True)
+        fkNumpy = fk.numpy(q_np, "panda_link3", position_only=True)

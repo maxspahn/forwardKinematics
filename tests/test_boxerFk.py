@@ -12,8 +12,8 @@ def fk() -> GenericURDFFk:
         urdf = file.read()
     fk_boxer = GenericURDFFk(
         urdf,
-        rootLink = 'base_link',
-        end_link="ee_link",
+        root_link = 'base_link',
+        end_links="ee_link",
         base_type='diffdrive',
     )
     return fk_boxer

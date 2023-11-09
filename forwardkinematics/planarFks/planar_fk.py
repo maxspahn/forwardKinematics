@@ -1,3 +1,4 @@
+from typing import Union
 import re
 import numpy as np
 
@@ -12,14 +13,9 @@ class ForwardKinematicsPlanar(ForwardKinematics):
         super().__init__()
         self._mount_transformation = np.identity(3)
 
-
-    def fk(self, q, link: str, positionOnly: bool=False):
-        if isinstance(link, str):
-            return super().fk(q, self.get_link_index(link), positionOnly=positionOnly)
-        else:
-            return super().fk(q, link, positionOnly=positionOnly)
-
-    def get_link_index(self, link: str):
+    def ensure_int_link(self, link: Union[str, int]):
+        if isinstance(link, int):
+            return link
         regex_match = re.match(r'\D*(\d*)', link)
         try:
             return int(regex_match.group(1))

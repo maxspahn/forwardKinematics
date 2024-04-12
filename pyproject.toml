@@ -15,7 +15,10 @@ casadi = "^3.5.4,!=3.5.5.post1,!=3.5.5.post2"
 numpy = "^1.15.3"
 urdf_parser_py = ">=0.0.3"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
 jedi = "^0.18.1"
 pytest = "^6.2.5"
 pytest-coverage = "^0.0"

@@ -38,3 +38,7 @@ def test_planar_arm():
     from planar_arm import main
     blueprint_test(main)
 
+def test_xml():
+    from xml_fk import main
+    blueprint_test(main)
+

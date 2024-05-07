@@ -1,4 +1,5 @@
 from typing import Union, List, Optional
+import logging
 import xml.etree.ElementTree as ET
 import numpy as np
 import casadi as ca
@@ -165,7 +166,7 @@ class GenericXMLFk(ForwardKinematics):
         child_link_found = False
         for element in root.iter():
             if child_link_found:
-                return T
+                break
             T_element = np.eye(4)
             if element.tag == 'body':
                 T_element = get_T_element(element)
@@ -173,7 +174,11 @@ class GenericXMLFk(ForwardKinematics):
                     child_link_found = True
             if element.tag == 'joint':
                 joint_type = 'hinge' if 'type' not in element.attrib else element.attrib['type']
-                joint_axis = [0, 0, 1] if 'axis' not in element.attrib else [int(x) for x in element.attrib['axis'].split()]
+                if 'axis' not in element.attrib:
+                    joint_axis = [0, 0, 1]
+                    logging.warning(f"Joint axis not found in XML. Assuming default axis {joint_axis}.")
+                else:
+                    joint_axis = [int(x) for x in element.attrib['axis'].split()]
                 if joint_type == 'hinge':
                     T_element = homogeneous_transformation(
                         rotation=axis2rotMat(
@@ -197,7 +202,10 @@ class GenericXMLFk(ForwardKinematics):
         if not child_link_found:
             raise ValueError(f"Child link {child_link} not found in XML.")
         else:
-            return T
+            if position_only:
+                return T[0:3,3]
+            else:
+                return T
 
 
 

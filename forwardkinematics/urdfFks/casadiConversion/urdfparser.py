@@ -157,7 +157,11 @@ class URDFparser(object):
             xyz = xyzrpy[:3]
             rpy = xyzrpy[3:]
             if joint.type == "fixed":
-                joint_frame = T.numpy_rpy(xyz, *rpy)
+                # check if xyz contains a ca.SX
+                if any(isinstance(i, ca.SX) for i in xyz) or any(isinstance(i, ca.SX) for i in rpy):
+                    joint_frame = T.fixed(xyz, rpy)
+                else:
+                    joint_frame = T.numpy_rpy(xyz, *rpy)
                 T_fk = ca.mtimes(T_fk, joint_frame)
 
             elif joint.type == "prismatic":

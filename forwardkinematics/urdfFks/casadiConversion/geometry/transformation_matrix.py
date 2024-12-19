@@ -3,6 +3,44 @@ joint type."""
 import casadi as cs
 import numpy as np
 
+def fixed(xyz, rpy) -> cs.SX:
+    """Returns a transformation matrix for a fixed joint."""
+    T = cs.SX.zeros(4, 4)
+
+    # Origin rotation from RPY ZYX convention
+    cr = cs.cos(rpy[0])
+    sr = cs.sin(rpy[0])
+    cp = cs.cos(rpy[1])
+    sp = cs.sin(rpy[1])
+    cy = cs.cos(rpy[2])
+    sy = cs.sin(rpy[2])
+    r00 = cy*cp
+    r01 = cy*sp*sr - sy*cr
+    r02 = cy*sp*cr + sy*sr
+    r10 = sy*cp
+    r11 = sy*sp*sr + cy*cr
+    r12 = sy*sp*cr - cy*sr
+    r20 = -sp
+    r21 = cp*sr
+    r22 = cp*cr
+
+    # Homogeneous transformation matrix
+    T[0, 0] = r00
+    T[0, 1] = r01
+    T[0, 2] = r02
+    T[1, 0] = r10
+    T[1, 1] = r11
+    T[1, 2] = r12
+    T[2, 0] = r20
+    T[2, 1] = r21
+    T[2, 2] = r22
+    T[0, 3] = xyz[0]
+    T[1, 3] = xyz[1]
+    T[2, 3] = xyz[2]
+    T[3, 3] = 1.0
+    return T
+
+
 
 def prismatic(xyz, rpy, axis, qi):
     T = cs.SX.zeros(4, 4)

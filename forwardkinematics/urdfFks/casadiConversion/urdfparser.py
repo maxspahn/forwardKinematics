@@ -2,17 +2,21 @@
 
 Changes are in get_forward_kinematics as it allows to pass the variable as an argument.
 """
+from typing import Dict
+
 import casadi as ca
 import numpy as np
 from urdf_parser_py.urdf import URDF
+
 import forwardkinematics.urdfFks.casadiConversion.geometry.transformation_matrix as T
 
 
 class URDFparser(object):
     """Class that turns a chain from URDF to casadi functions."""
+
     actuated_types = ["prismatic", "revolute", "continuous"]
-    
-    def __init__(self, root_link: str="base_link", end_links: list = None):
+
+    def __init__(self, root_link: str = "base_link", end_links: list = None):
         self._root_link = root_link
         if isinstance(end_links, str):
             self._end_links = [end_links]
@@ -89,17 +93,16 @@ class URDFparser(object):
                 self._active_joints.add(parent_joint)
                 if parent_link == self._root_link:
                     break
-        
+
     def active_joints(self) -> set:
         return self._active_joints
-        
 
     def get_joint_info(self, root, tip) -> list:
         """Using an URDF to extract joint information, i.e list of
         joints, actuated names and upper and lower limits."""
         chain = self.robot_desc.get_chain(root, tip)
         if self.robot_desc is None:
-            raise ValueError('Robot description not loaded from urdf')
+            raise ValueError("Robot description not loaded from urdf")
 
         joint_list = []
 
@@ -120,46 +123,68 @@ class URDFparser(object):
             if link.name in self.robot_desc.parent_map:
                 self._link_names.append(link.name)
             else:
-                print(f"Link with name {link.name} does not has a parent. Link name is skipped.")
+                print(
+                    f"Link with name {link.name} does not has a parent. Link name is skipped."
+                )
         return self._link_names
 
-    def get_forward_kinematics(self, root, tip, q, link_transformation=np.eye(4)):
+    def get_forward_kinematics(
+        self,
+        root,
+        tip,
+        q,
+        link_transformation=np.eye(4),
+        symbolic_parameters: Dict[str, Dict[str, ca.SX]] = None,
+    ) -> Dict[str, ca.SX]:
+        if symbolic_parameters is None:
+            symbolic_parameters = {}
         """Returns the forward kinematics as a casadi function."""
         if self.robot_desc is None:
-            raise ValueError('Robot description not loaded from urdf')
+            raise ValueError("Robot description not loaded from urdf")
         joint_list = self.get_joint_info(self._absolute_root_link, tip)
         T_fk = ca.SX.eye(4)
         for joint in joint_list:
+            # For xyz and rpy, check if they are in the symbolic parameters
+            xyzrpy = joint.origin.xyz + joint.origin.rpy
+            if joint.name in symbolic_parameters:
+                for index, parameter in enumerate(
+                    ["x", "y", "z", "roll", "pitch", "yaw"]
+                ):
+                    if parameter in symbolic_parameters[joint.name]:
+                        xyzrpy[index] = symbolic_parameters[joint.name][parameter]
+
+            # xyz = joint.origin.xyz
+            xyz = xyzrpy[:3]
+            rpy = xyzrpy[3:]
             if joint.type == "fixed":
-                xyz = joint.origin.xyz
-                rpy = joint.origin.rpy
-                joint_frame = T.numpy_rpy(xyz, *rpy)
+                # check if xyz contains a ca.SX
+                if any(isinstance(i, ca.SX) for i in xyz) or any(isinstance(i, ca.SX) for i in rpy):
+                    joint_frame = T.fixed(xyz, rpy)
+                else:
+                    joint_frame = T.numpy_rpy(xyz, *rpy)
                 T_fk = ca.mtimes(T_fk, joint_frame)
 
             elif joint.type == "prismatic":
                 if joint.axis is None:
-                    axis = ca.np.array([1., 0., 0.])
+                    axis = ca.np.array([1.0, 0.0, 0.0])
                 else:
                     axis = ca.np.array(joint.axis)
-                joint_frame = T.prismatic(joint.origin.xyz,
-                                          joint.origin.rpy,
-                                          joint.axis, q[self._joint_map[joint.name]])
+                joint_frame = T.prismatic(
+                    xyz, rpy, joint.axis, q[self._joint_map[joint.name]]
+                )
                 T_fk = ca.mtimes(T_fk, joint_frame)
 
             elif joint.type in ["revolute", "continuous"]:
                 if joint.axis is None:
-                    axis = ca.np.array([1., 0., 0.])
+                    axis = ca.np.array([1.0, 0.0, 0.0])
                 else:
                     axis = ca.np.array(joint.axis)
-                axis = (1./ca.np.linalg.norm(axis))*axis
+                axis = (1.0 / ca.np.linalg.norm(axis)) * axis
                 joint_frame = T.revolute(
-                    joint.origin.xyz,
-                    joint.origin.rpy,
-                    joint.axis, q[self._joint_map[joint.name]])
+                    xyz, rpy, joint.axis, q[self._joint_map[joint.name]]
+                )
                 T_fk = ca.mtimes(T_fk, joint_frame)
 
         T_fk = ca.mtimes(T_fk, link_transformation)
 
-        return {
-            "T_fk": T_fk
-        }
+        return {"T_fk": T_fk}

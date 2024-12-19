@@ -107,26 +107,29 @@ def test_symbolic_fk(fk: GenericURDFFk):
     q_ca = ca.SX.sym("q", 7)
     panda_joint1_z = ca.SX.sym("panda_joint1_z")
     panda_joint3_roll = ca.SX.sym("panda_joint3_roll")
+    panda_joint8_z = ca.SX.sym("panda_joint8_z")
     symbolic_parameters = {
         "panda_joint1": {
             "z": panda_joint1_z,
         },
         "panda_joint3": {"roll": panda_joint3_roll},
+        "panda_joint8": {"z": panda_joint8_z},
     }
 
-    link_name = "panda_link5"
+    link_name = "panda_link8"
     fkCasadi = fk.casadi(
         q_ca, link_name, position_only=False, symbolic_parameters=symbolic_parameters
     )
     assert isinstance(fkCasadi, ca.SX)
     fk_casadi_function = ca.Function(
-        "fk", [q_ca, panda_joint1_z, panda_joint3_roll], [fkCasadi]
+        "fk", [q_ca, panda_joint1_z, panda_joint3_roll, panda_joint8_z], [fkCasadi]
     )
     q_np = np.random.random(7)
     z = 0.333
     roll = 1.57079632679
+    z_last = 0.107
     fk_np = fk.numpy(q_np, link_name, position_only=False)
-    fk_symbolic_np = fk_casadi_function(q_np, z, roll)
+    fk_symbolic_np = fk_casadi_function(q_np, z, roll, z_last)
     print(fk_np)
     print(fk_symbolic_np)
     assert np.allclose(fk_np, fk_symbolic_np, atol=1e-4)
